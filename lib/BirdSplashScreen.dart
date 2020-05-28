@@ -44,20 +44,25 @@ class BirdSplashScreenState extends State<BirdSplashScreen> with SingleTickerPro
       children: <Widget>[
         CircleAvatar(
           backgroundColor: Colors.white,
-          radius: 100,
+          radius: 80,
         ),
-        Image.asset(_icons[selected],
-          height: 200,
-          width: 250,
-        fit: BoxFit.fitWidth,)
+        Positioned(
+          child: Image.asset(_icons[selected],
+            height: 200,
+            width: 250,
+            fit: BoxFit.fitWidth,),
+          left: -40,
+          top: -20,
+        )
       ],
+      overflow: Overflow.visible,
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF6AB7A8),
+      backgroundColor: Color(0xFFFCE4EC),
       body: Center(
         child: _fetchIcon(),
       ),
