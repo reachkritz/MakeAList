@@ -10,16 +10,17 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Make a List!',
       theme: ThemeData(
         fontFamily: 'Raleway',
         textTheme: Theme.of(context).textTheme.apply(
-              bodyColor: Colors.black,
-              displayColor: Colors.grey[600],
+              bodyColor: Colors.white,
+              displayColor: Colors.white,
             ),
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MaterialApp(home: BirdSplashScreen()),
+      home: BirdSplashScreen(),
     );
   }
 }

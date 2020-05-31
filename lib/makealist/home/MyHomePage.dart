@@ -21,8 +21,30 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage>{
 
+  final _padding = EdgeInsets.all(20.0);
   @override
   Widget build(BuildContext context) {
+
+    final layout = Padding(
+      padding: _padding,
+      child: Column(
+        verticalDirection: VerticalDirection.down,
+        children: [
+          Text(
+            'To-Do Lists',
+            style: Theme.of(context).textTheme.headline2,
+            textAlign: TextAlign.start,
+          ),
+          IconButton(
+              icon: Icon(
+                Icons.add,
+                color: Colors.black,
+                size: 20.0,
+              ),
+              onPressed: null)
+        ],
+      ),
+    );
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
@@ -30,12 +52,8 @@ class _MyHomePageState extends State<MyHomePage>{
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: Center(
-        child: Text(
-          'Make a List!'
-        ),
-      ),
-    );
+        backgroundColor: Color(0xFF6AB7A8),
+        body: layout
+      );
   }
 }

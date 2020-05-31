@@ -27,9 +27,10 @@ class BirdSplashScreenState extends State<BirdSplashScreen>
   @override
   void initState() {
     super.initState();
+    double screensize = 5.0;
     _controller =
-        AnimationController(duration: const Duration(seconds: 4), vsync: this);
-    _animation = IntTween(begin: 0, end: 50)
+        AnimationController(duration: const Duration(seconds: 3), vsync: this);
+    _animation = IntTween(begin: 0, end: 40)
         .animate(CurvedAnimation(parent: _controller, curve: Curves.decelerate))
           ..addListener(() {
             setState(() {
@@ -38,11 +39,11 @@ class BirdSplashScreenState extends State<BirdSplashScreen>
           });
     _offsetAnimation = Tween<Offset>(
       begin: Offset.zero,
-      end: const Offset(1, -1),
+      end: Offset(screensize, -screensize),
     ).animate(CurvedAnimation(
         parent: _controller, curve: Interval(0.5, 1.0, curve: Curves.easeIn)));
     _controller.forward();
-    Future.delayed(Duration(seconds: 4), () {
+    Future.delayed(Duration(seconds: 3), () {
       Navigator.push(context, SlidingRouteBuilder(secondScreen: MyHomePage()));
     });
   }
@@ -52,20 +53,17 @@ class BirdSplashScreenState extends State<BirdSplashScreen>
       children: <Widget>[
         CircleAvatar(
           backgroundColor: Colors.white,
-          radius: 80,
+          radius: 40,
         ),
         SlideTransition(
             position: _offsetAnimation,
-            child: Positioned(
               child: Image.asset(
                 _icons[selected],
-                height: 200,
-                width: 250,
+                height: 100,
+                width: 100,
                 fit: BoxFit.fitWidth,
               ),
-              left: -40,
-              top: -20,
-            ))
+             )
       ],
       overflow: Overflow.visible,
     );
