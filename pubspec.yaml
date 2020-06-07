@@ -33,8 +33,8 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
-# For information on the generic Dart part of this file, see the
-# following page: https://dart.dev/tools/pub/pubspec
+  # For information on the generic Dart part of this file, see the
+  # following page: https://dart.dev/tools/pub/pubspec
   flutter_launcher_icons: "^0.7.0"
 
 flutter_icons:
@@ -87,6 +87,9 @@ flutter:
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
   fonts:
-  - family: Raleway
-    fonts:
-      - asset: third_party/Raleway-Regular.ttf
+    - family: Raleway
+      fonts:
+        - asset: third_party/Raleway-Regular.ttf
+    - family: DancingScript
+      fonts:
+        - asset: third_party/DancingScript-VariableFont_wght.ttf
