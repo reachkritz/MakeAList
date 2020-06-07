@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'MyList.dart';
+
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
 
@@ -22,6 +24,23 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage>{
 
   final _padding = EdgeInsets.all(20.0);
+
+  Widget _showNewList(){
+    return new Center(
+        child : Container(
+            height: MediaQuery.of(context).size.height * 0.80,
+            width: MediaQuery.of(context).size.width * 0.80,
+            child: new Card(
+                elevation: 5.0,
+                borderOnForeground: true,
+                shadowColor: Colors.black12,
+                color: Color(0xFFFFD28E),
+                child: new MyList()
+            )
+        )
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -41,7 +60,15 @@ class _MyHomePageState extends State<MyHomePage>{
                 color: Colors.black,
                 size: 20.0,
               ),
-              onPressed: null)
+              onPressed: () {
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return _showNewList();
+                    },
+                );
+              }
+          )
         ],
       ),
     );

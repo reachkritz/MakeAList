@@ -12,8 +12,7 @@ class BirdSplashScreen extends StatefulWidget {
   }
 }
 
-class BirdSplashScreenState extends State<BirdSplashScreen>
-    with SingleTickerProviderStateMixin {
+class BirdSplashScreenState extends State<BirdSplashScreen> with SingleTickerProviderStateMixin {
   static const _icons = <String>[
     'assets/icons/IconBird.0.png',
     'assets/icons/IconBird.1.png',
