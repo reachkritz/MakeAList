@@ -92,4 +92,4 @@ flutter:
         - asset: third_party/Raleway-Regular.ttf
     - family: DancingScript
       fonts:
-        - asset: third_party/DancingScript-VariableFont_wght.ttf
+        - asset: third_party/DancingScript-SemiBold.ttf
