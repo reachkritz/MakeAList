@@ -29,11 +29,18 @@ class MyListState extends State<MyList> {
     });
   }
 
+  void _onRemoveListItem(Item item) {
+    setState(() {
+      listItems.remove(item);
+    });
+  }
+
+
   @override
   Widget build(BuildContext context) {
-    Item i1 = new Item(index: 1);
-    Item i2 = new Item(index: 2);
-    Item i3 = new Item(index: 3);
+    Item i1 = new Item();
+    Item i2 = new Item();
+    Item i3 = new Item();
     listItems = new List();
     listItems.add(i1);
     listItems.add(i2);
@@ -69,7 +76,8 @@ class MyListState extends State<MyList> {
                   itemCount: listItems.length,
                   itemBuilder: (BuildContext ctxt, int index) {
                     return new Padding(
-                        padding: _padding, child: listItems[index]);
+                        padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.015),
+                        child: listItems[index]);
                   }),
             ),
             IconButton(
@@ -82,6 +90,10 @@ class MyListState extends State<MyList> {
                 onPressed: _submitList)
           ],
         ));
-    return listView;
+    return Container(
+      width: MediaQuery.of(context).size.width * 0.80,
+      height: MediaQuery.of(context).size.height * 0.80,
+      child: listView,
+    );
   }
 }
