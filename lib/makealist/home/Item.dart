@@ -13,6 +13,7 @@ class Item extends StatefulWidget {
 class ItemState extends State<Item> {
   String text;
   Color itemAction = Colors.grey;
+  Color rowColor = Color(0xFFFFD28E);
 
   double _getIconSize() {
     return MediaQuery.of(context).size.height >
@@ -21,20 +22,21 @@ class ItemState extends State<Item> {
         : MediaQuery.of(context).size.height * 0.05;
   }
 
+  void _changeColor() {
+    setState(() {
+      if(rowColor == Color(0xFFFFD28E)){
+        rowColor = Colors.cyan;
+      } else {
+        rowColor = Color(0xFFFFD28E);
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final itemRow = Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        IconButton(
-          hoverColor: Colors.black12,
-          focusColor: Colors.blueGrey,
-          iconSize: _getIconSize(),
-          icon: Icon(
-            Icons.remove_circle,
-            color: Colors.brown,
-          ),
-        ),
         Container(
           width: MediaQuery.of(context).size.width * 0.45,
           child: TextField(
@@ -60,7 +62,12 @@ class ItemState extends State<Item> {
     return Container(
         height: MediaQuery.of(context).size.height * 0.1,
         width: MediaQuery.of(context).size.width * 0.65,
-        child: itemRow);
+        color: rowColor,
+        child: GestureDetector(
+            onLongPress: _changeColor,
+            onTap: _changeColor,
+            child: itemRow)
+    );
   }
 
   void _toggleAction() {

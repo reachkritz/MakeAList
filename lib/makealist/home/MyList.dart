@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -12,7 +14,8 @@ class MyList extends StatefulWidget {
 
 class MyListState extends State<MyList> {
   String listHeader;
-  List<Item> listItems;
+  List<Item> listItems = new List();
+  List<int> selectedItems = new List();
   final _padding = EdgeInsets.all(5.0);
 
   void _setHeader(String input) {
@@ -29,9 +32,14 @@ class MyListState extends State<MyList> {
     });
   }
 
-  void _onRemoveListItem(Item item) {
+  void _deleteItems(){ // call _deleteItems() on clicking delete button
     setState(() {
-      listItems.remove(item);
+      //set your state
+      for (final index in selectedItems){
+        log("Index" +index.toString());
+        listItems.removeAt(index);
+      }
+      selectedItems.clear();
     });
   }
 
@@ -41,7 +49,6 @@ class MyListState extends State<MyList> {
     Item i1 = new Item();
     Item i2 = new Item();
     Item i3 = new Item();
-    listItems = new List();
     listItems.add(i1);
     listItems.add(i2);
     listItems.add(i3);
@@ -75,19 +82,47 @@ class MyListState extends State<MyList> {
               child: new ListView.builder(
                   itemCount: listItems.length,
                   itemBuilder: (BuildContext ctxt, int index) {
-                    return new Padding(
+                    return new GestureDetector(
+                        onLongPress: () {
+                          if(selectedItems.contains(index))
+                            selectedItems.remove(index);
+                          else
+                            selectedItems.add(index);
+                        },
+                        onTap: () {
+                          if(selectedItems.contains(index))
+                            selectedItems.remove(index);
+                          else
+                            selectedItems.add(index);
+                        },
+                    child: Padding(
                         padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.015),
-                        child: listItems[index]);
-                  }),
+                        child: listItems[index]
+                    ));
+                  })
             ),
-            IconButton(
-                iconSize: MediaQuery.of(context).size.height * 0.05,
-                icon: Icon(
-                  Icons.check,
-                  color: Colors.lightBlue,
-                  size: MediaQuery.of(context).size.height * 0.05,
+            Row(
+              children: [
+                IconButton(
+                    iconSize: MediaQuery.of(context).size.height * 0.05,
+                    icon: Icon(
+                      Icons.check,
+                      color: Colors.lightBlue,
+                      size: MediaQuery.of(context).size.height * 0.05,
+                    ),
+                    onPressed: _submitList
                 ),
-                onPressed: _submitList)
+                IconButton(
+                    iconSize: MediaQuery.of(context).size.height * 0.05,
+                    icon: Icon(
+                      Icons.delete_outline,
+                      color: Colors.lightBlue,
+                      size: MediaQuery.of(context).size.height * 0.05,
+                    ),
+                    onPressed: _deleteItems
+                ),
+              ],
+            )
           ],
         ));
     return Container(
