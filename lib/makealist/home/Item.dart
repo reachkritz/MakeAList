@@ -61,12 +61,9 @@ class ItemState extends State<Item> {
 
     return Container(
         height: MediaQuery.of(context).size.height * 0.1,
-        width: MediaQuery.of(context).size.width * 0.65,
+        width: MediaQuery.of(context).size.width * 0.55,
         color: rowColor,
-        child: GestureDetector(
-            onLongPress: _changeColor,
-            onTap: _changeColor,
-            child: itemRow)
+        child: itemRow
     );
   }
 
