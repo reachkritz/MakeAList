@@ -1,14 +1,16 @@
 import 'package:makealist/makealist/home/MyList.dart';
+import 'package:makealist/makealist/persistence/ArrayPersistence.dart';
 import 'package:makealist/makealist/persistence/FilePersistence.dart';
+import 'package:makealist/makealist/persistence/Repository.dart';
 
 class PersistorService{
-  FilePersistence filePersistence;
+  ArrayPersistence repo;
   PersistorService(){
-    filePersistence = new FilePersistence();
+    repo = new ArrayPersistence();
   }
 
   void saveList(MyList list){
-
+    repo.saveItem(list);
   }
 
   MyList getList(String key){
@@ -16,7 +18,7 @@ class PersistorService{
   }
 
   List<MyList> getAllLists(){
-
+    return repo.getAll();
   }
 
   List<MyList> getListsByDateRange(DateTime start, DateTime end){

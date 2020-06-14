@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:makealist/makealist/service/PersistorService.dart';
 
 import 'MyList.dart';
 
@@ -21,13 +22,13 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage>{
-
+class _MyHomePageState extends State<MyHomePage> {
   final _padding = EdgeInsets.all(20.0);
+  PersistorService service = new PersistorService();
 
-  Widget _showNewList(){
+  Widget _showNewList() {
     return new Center(
-        child : Container(
+        child: Container(
             height: MediaQuery.of(context).size.height * 0.80,
             width: MediaQuery.of(context).size.width * 0.80,
             child: new Card(
@@ -35,40 +36,45 @@ class _MyHomePageState extends State<MyHomePage>{
                 borderOnForeground: true,
                 shadowColor: Colors.black12,
                 color: Color(0xFFFFD28E),
-                child: new MyList()
-            )
-        )
-    );
+                child: new MyList())));
   }
 
   @override
   Widget build(BuildContext context) {
-
     final layout = Padding(
       padding: _padding,
       child: Column(
         verticalDirection: VerticalDirection.down,
         children: [
-          Text(
-            'To-Do Lists',
-            style: Theme.of(context).textTheme.headline2,
-            textAlign: TextAlign.start,
-          ),
-          IconButton(
-              icon: Icon(
-                Icons.add,
-                color: Colors.black,
-                size: 20.0,
+          Expanded(
+            child: CustomScrollView(slivers: <Widget>[
+              const SliverAppBar(
+                pinned: true,
+                expandedHeight: 250.0,
+                flexibleSpace: FlexibleSpaceBar(
+                  title: Text('To-Do Lists'),
+                ),
               ),
-              onPressed: () {
-                showDialog(
-                    context: context,
-                    builder: (context) {
-                      return _showNewList();
-                    },
-                );
-              }
-          )
+              SliverGrid(
+                gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                  maxCrossAxisExtent: 200.0,
+                  mainAxisSpacing: 10.0,
+                  crossAxisSpacing: 10.0,
+                  childAspectRatio: 4.0,
+                ),
+                delegate: SliverChildBuilderDelegate(
+                  (BuildContext context, int index) {
+                    return Container(
+                      alignment: Alignment.center,
+                      color: Colors.teal[100 * (index % 9)],
+                      child: Text('Grid Item $index'),
+                    );
+                  },
+                  childCount: 40,
+                ),
+              ),
+            ]),
+          ),
         ],
       ),
     );
@@ -79,8 +85,24 @@ class _MyHomePageState extends State<MyHomePage>{
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
-        backgroundColor: Color(0xFF6AB7A8),
-        body: layout
-      );
+      backgroundColor: Color(0xFF6AB7A8),
+      body: layout,
+      floatingActionButton: FloatingActionButton(
+          elevation: 2.0,
+          hoverColor: Colors.cyan,
+          child: Icon(
+            Icons.add,
+            color: Colors.white,
+            size: 20.0,
+          ),
+          onPressed: () {
+            showDialog(
+              context: context,
+              builder: (context) {
+                return _showNewList();
+              },
+            );
+          }),
+    );
   }
 }
