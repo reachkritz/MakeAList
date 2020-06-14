@@ -1,4 +1,4 @@
-import 'package:makealist/makealist/home/MyList.dart';
+import 'package:makealist/makealist/home/MyListExpandableView.dart';
 import 'package:makealist/makealist/persistence/ArrayPersistence.dart';
 import 'package:makealist/makealist/persistence/FilePersistence.dart';
 import 'package:makealist/makealist/persistence/Repository.dart';
@@ -9,19 +9,19 @@ class PersistorService{
     repo = new ArrayPersistence();
   }
 
-  void saveList(MyList list){
+  void saveList(MyListCardView list){
     repo.saveItem(list);
   }
 
-  MyList getList(String key){
+  MyListCardView getList(String key){
 
   }
 
-  List<MyList> getAllLists(){
+  List<MyListCardView> getAllLists(){
     return repo.getAll();
   }
 
-  List<MyList> getListsByDateRange(DateTime start, DateTime end){
+  List<MyListCardView> getListsByDateRange(DateTime start, DateTime end){
 
   }
 

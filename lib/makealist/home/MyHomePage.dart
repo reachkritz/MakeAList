@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:makealist/makealist/home/MyList.dart';
 import 'package:makealist/makealist/service/PersistorService.dart';
 
-import 'MyList.dart';
+import 'MyListClickableView.dart';
+import 'MyListExpandableView.dart';
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
@@ -36,7 +38,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 borderOnForeground: true,
                 shadowColor: Colors.black12,
                 color: Color(0xFFFFD28E),
-                child: new MyList())));
+                child: new MyListCardView(new MyList()))));
   }
 
   @override
@@ -64,11 +66,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 delegate: SliverChildBuilderDelegate(
                   (BuildContext context, int index) {
-                    return Container(
-                      alignment: Alignment.center,
-                      color: Colors.teal[100 * (index % 9)],
-                      child: Text('Grid Item $index'),
-                    );
+                    return MyListClickableView(index, new MyList.header("Hello test"));
                   },
                   childCount: 40,
                 ),
@@ -88,6 +86,7 @@ class _MyHomePageState extends State<MyHomePage> {
       backgroundColor: Color(0xFF6AB7A8),
       body: layout,
       floatingActionButton: FloatingActionButton(
+          heroTag: "addNewList",
           elevation: 2.0,
           hoverColor: Colors.cyan,
           child: Icon(
@@ -102,7 +101,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 return _showNewList();
               },
             );
-          }),
+          }
+          ),
     );
   }
 }
