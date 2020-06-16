@@ -4,9 +4,14 @@ import 'package:flutter/material.dart';
 final _padding = EdgeInsets.all(5.0);
 
 class Item extends StatefulWidget {
+  String text;
+  Item();
+  Item.text(String input){
+    text = input;
+  }
   @override
   State<StatefulWidget> createState() {
-    return new ItemState();
+    return new ItemState(text);
   }
 }
 
@@ -14,6 +19,10 @@ class ItemState extends State<Item> {
   String text;
   Color itemAction = Colors.grey;
   Color rowColor = Color(0xFFFFD28E);
+
+  ItemState(String text){
+    this.text = text;
+  }
 
   double _getIconSize() {
     return MediaQuery.of(context).size.height >

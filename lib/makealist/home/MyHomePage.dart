@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:makealist/makealist/home/MyList.dart';
+import 'package:makealist/makealist/persistence/ArrayPersistence.dart';
 import 'package:makealist/makealist/service/PersistorService.dart';
 
 import 'MyListClickableView.dart';
@@ -25,8 +26,15 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final _padding = EdgeInsets.all(20.0);
+
   PersistorService service = new PersistorService();
+  List<MyList> lists ;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchLists();
+  }
 
   Widget _showNewList() {
     return new Center(
@@ -40,12 +48,15 @@ class _MyHomePageState extends State<MyHomePage> {
                 color: Color(0xFFFFD28E),
                 child: new MyListCardView(new MyList()))));
   }
-
+  Future<void> _fetchLists() async {
+    final fetchedLists = await service.getAllLists();
+    setState(() {
+      lists = fetchedLists;
+    });
+  }
   @override
   Widget build(BuildContext context) {
-    final layout = Padding(
-      padding: _padding,
-      child: Column(
+    final layout = Column(
         verticalDirection: VerticalDirection.down,
         children: [
           Expanded(
@@ -59,23 +70,25 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               SliverGrid(
                 gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 200.0,
-                  mainAxisSpacing: 10.0,
-                  crossAxisSpacing: 10.0,
-                  childAspectRatio: 4.0,
+                  maxCrossAxisExtent: 400.0,
+                  mainAxisSpacing: MediaQuery.of(context).size.height * 0.03,
+                  crossAxisSpacing: MediaQuery.of(context).size.width * 0.04,
+                  childAspectRatio: 0.75,
                 ),
                 delegate: SliverChildBuilderDelegate(
                   (BuildContext context, int index) {
-                    return MyListClickableView(index, new MyList.header("Hello test"));
+                    return Padding(
+                      padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.04),
+                      child: MyListClickableView(index, lists[index]),
+                    );
                   },
-                  childCount: 40,
+                  childCount: lists.length,
                 ),
               ),
             ]),
           ),
         ],
-      ),
-    );
+      );
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
@@ -83,7 +96,7 @@ class _MyHomePageState extends State<MyHomePage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
-      backgroundColor: Color(0xFF6AB7A8),
+      backgroundColor: Colors.black12,
       body: layout,
       floatingActionButton: FloatingActionButton(
           heroTag: "addNewList",
