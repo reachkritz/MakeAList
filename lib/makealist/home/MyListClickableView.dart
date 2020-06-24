@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'MyList.dart';
-import 'MyListExpandableView.dart';
+import 'MyListCardView.dart';
 
 class MyListClickableView extends StatelessWidget {
   MyList list;
@@ -23,7 +23,7 @@ class MyListClickableView extends StatelessWidget {
                 borderOnForeground: true,
                 shadowColor: Colors.black12,
                 color: Color(0xFFFFD28E),
-                child: new MyListCardView(new MyList()))));
+                child: new MyListCardView(list))));
   }
 
   @override

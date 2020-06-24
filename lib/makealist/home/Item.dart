@@ -19,6 +19,7 @@ class ItemState extends State<Item> {
   String text;
   Color itemAction = Colors.grey;
   Color rowColor = Color(0xFFFFD28E);
+  TextEditingController _controller = new TextEditingController();
 
   ItemState(String text){
     this.text = text;
@@ -41,14 +42,37 @@ class ItemState extends State<Item> {
     });
   }
 
+  void _setText() {
+    setState(() {
+      text = _controller.text;
+    });
+  }
+
+  @override
+  void initState(){
+    super.initState();
+    _controller.addListener(_setText);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
+    setState(() {
+      _controller.text = text;
+    });
+
     final itemRow = Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         Container(
           width: MediaQuery.of(context).size.width * 0.45,
           child: TextField(
+            controller: _controller,
             style: TextStyle(
               color: Colors.brown,
               fontSize: 20,

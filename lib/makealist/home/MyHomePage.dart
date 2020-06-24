@@ -1,11 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:makealist/makealist/home/MyList.dart';
-import 'package:makealist/makealist/persistence/ArrayPersistence.dart';
 import 'package:makealist/makealist/service/PersistorService.dart';
 
 import 'MyListClickableView.dart';
-import 'MyListExpandableView.dart';
+import 'MyListCardView.dart';
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
@@ -26,9 +25,9 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
   PersistorService service = new PersistorService();
-  List<MyList> lists ;
+  List<MyList> lists = new List();
+  MyList newList = new MyList();
 
   @override
   void initState() {
@@ -36,59 +35,84 @@ class _MyHomePageState extends State<MyHomePage> {
     _fetchLists();
   }
 
+  void _submitList() {
+    setState(() {
+      if (newList.listHeader == null || newList.listHeader.isEmpty) {
+        newList.listHeader = "New List - " + TimeOfDay.now().toString();
+      }
+      service.saveList(newList);
+      newList = new MyList();
+    });
+  }
+
   Widget _showNewList() {
     return new Center(
         child: Container(
             height: MediaQuery.of(context).size.height * 0.80,
             width: MediaQuery.of(context).size.width * 0.80,
-            child: new Card(
+            child: Card(
                 elevation: 5.0,
                 borderOnForeground: true,
                 shadowColor: Colors.black12,
                 color: Color(0xFFFFD28E),
-                child: new MyListCardView(new MyList()))));
+                child: Column(
+                  children: [
+                    new MyListCardView(newList),
+                    IconButton(
+                        iconSize: MediaQuery.of(context).size.height * 0.05,
+                        icon: Icon(
+                          Icons.check,
+                          color: Colors.lightBlue,
+                          size: MediaQuery.of(context).size.height * 0.05,
+                        ),
+                        onPressed: _submitList)
+                  ],
+                ))));
   }
+
   Future<void> _fetchLists() async {
     final fetchedLists = await service.getAllLists();
     setState(() {
       lists = fetchedLists;
     });
   }
+
   @override
   Widget build(BuildContext context) {
     final layout = Column(
-        verticalDirection: VerticalDirection.down,
-        children: [
-          Expanded(
-            child: CustomScrollView(slivers: <Widget>[
-              const SliverAppBar(
-                pinned: true,
-                expandedHeight: 250.0,
-                flexibleSpace: FlexibleSpaceBar(
-                  title: Text('To-Do Lists'),
-                ),
+      verticalDirection: VerticalDirection.down,
+      children: [
+        Expanded(
+          child: CustomScrollView(slivers: <Widget>[
+            const SliverAppBar(
+              pinned: true,
+              expandedHeight: 250.0,
+              flexibleSpace: FlexibleSpaceBar(
+                title: Text('To-Do Lists'),
               ),
-              SliverGrid(
-                gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 400.0,
-                  mainAxisSpacing: MediaQuery.of(context).size.height * 0.03,
-                  crossAxisSpacing: MediaQuery.of(context).size.width * 0.04,
-                  childAspectRatio: 0.75,
-                ),
-                delegate: SliverChildBuilderDelegate(
-                  (BuildContext context, int index) {
-                    return Padding(
-                      padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.04),
-                      child: MyListClickableView(index, lists[index]),
-                    );
-                  },
-                  childCount: lists.length,
-                ),
+            ),
+            SliverGrid(
+              gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                maxCrossAxisExtent: 400.0,
+                mainAxisSpacing: MediaQuery.of(context).size.height * 0.03,
+                crossAxisSpacing: MediaQuery.of(context).size.width * 0.04,
+                childAspectRatio: 0.75,
               ),
-            ]),
-          ),
-        ],
-      );
+              delegate: SliverChildBuilderDelegate(
+                (BuildContext context, int index) {
+                  return Padding(
+                    padding: EdgeInsets.all(
+                        MediaQuery.of(context).size.width * 0.04),
+                    child: MyListClickableView(index, lists[index]),
+                  );
+                },
+                childCount: lists.length,
+              ),
+            ),
+          ]),
+        ),
+      ],
+    );
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
@@ -114,8 +138,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 return _showNewList();
               },
             );
-          }
-          ),
+          }),
     );
   }
 }

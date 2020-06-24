@@ -22,14 +22,15 @@ class MyListCardViewState extends State<MyListCardView> {
   MyList list;
   List<int> selectedItems = new List();
   final _padding = EdgeInsets.all(5.0);
+  TextEditingController _controller = new TextEditingController();
 
   MyListCardViewState(MyList list){
     this.list = list;
   }
 
-  void _setHeader(String input) {
+  void _setHeader() {
     setState(() {
-      list.listHeader = input;
+      list.listHeader = _controller.text;
     });
   }
 
@@ -40,29 +41,23 @@ class MyListCardViewState extends State<MyListCardView> {
         : MediaQuery.of(context).size.height * 0.05;
   }
 
-  void _submitList() {
-    setState(() {
-      if (list.listHeader == null || list.listHeader.isEmpty) {
-        list.listHeader = "New List - " + TimeOfDay.now().toString();
-      }
-    });
-  }
   @override
-  void initState() {
-    super.initState();
-    Item i1 = new Item();
-    Item i2 = new Item();
-    Item i3 = new Item();
-    setState(() {
-      list.listItems.add(i1);
-      list.listItems.add(i2);
-      list.listItems.add(i3);
-    });
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
+  @override
+  void initState(){
+    super.initState();
+    _controller.addListener(_setHeader);
+  }
 
   @override
   Widget build(BuildContext context) {
+    setState(() {
+      _controller.text = list.listHeader;
+    });
 
     final listView = new Padding(
         padding: EdgeInsets.all(1.0),
@@ -71,15 +66,14 @@ class MyListCardViewState extends State<MyListCardView> {
             Padding(
                 padding: _padding * 2,
                 child: TextField(
-                    enableSuggestions: true,
                     keyboardType: TextInputType.text,
-                    onChanged: _setHeader,
                     cursorColor: Colors.black38,
                     maxLength: 50,
                     maxLengthEnforced: true,
+                    controller: _controller,
                     style: TextStyle(
                         color: Colors.brown,
-                        fontSize: 60,
+                        fontSize: 50,
                         fontFamily: 'DancingScript'),
                     decoration: InputDecoration(
                         labelStyle: TextStyle(
@@ -134,22 +128,13 @@ class MyListCardViewState extends State<MyListCardView> {
                   list.listItems.add(new Item());
                 });
               },
-            ),
-            IconButton(
-                    iconSize: MediaQuery.of(context).size.height * 0.05,
-                    icon: Icon(
-                      Icons.check,
-                      color: Colors.lightBlue,
-                      size: MediaQuery.of(context).size.height * 0.05,
-                    ),
-                    onPressed: _submitList
-                )
+            )
               ]
         ));
     return Center(
       child: Container(
         width: MediaQuery.of(context).size.width * 0.80,
-        height: MediaQuery.of(context).size.height * 0.80,
+        height: MediaQuery.of(context).size.height * 0.70,
         child: listView,
       )
     );
