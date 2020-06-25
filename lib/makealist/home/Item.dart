@@ -52,6 +52,9 @@ class ItemState extends State<Item> {
   void initState(){
     super.initState();
     _controller.addListener(_setText);
+    setState(() {
+      _controller.text = text;
+    });
   }
 
   @override
@@ -62,9 +65,6 @@ class ItemState extends State<Item> {
 
   @override
   Widget build(BuildContext context) {
-    setState(() {
-      _controller.text = text;
-    });
 
     final itemRow = Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,

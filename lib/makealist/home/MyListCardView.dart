@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -51,13 +49,13 @@ class MyListCardViewState extends State<MyListCardView> {
   void initState(){
     super.initState();
     _controller.addListener(_setHeader);
+    setState(() {
+      _controller.text = list.listHeader;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    setState(() {
-      _controller.text = list.listHeader;
-    });
 
     final listView = new Padding(
         padding: EdgeInsets.all(1.0),
@@ -129,7 +127,7 @@ class MyListCardViewState extends State<MyListCardView> {
                 });
               },
             )
-              ]
+          ]
         ));
     return Center(
       child: Container(
