@@ -101,7 +101,7 @@ class MyListCardViewState extends State<MyListCardView> {
                                 ),
                                 onPressed: () {
                                   setState(() {
-                                    list.listItems.removeAt(index);
+                                    list.removeWithFlags(index);
                                   });
                                 },
                               )
@@ -123,7 +123,7 @@ class MyListCardViewState extends State<MyListCardView> {
               ),
               onPressed: () {
                 setState(() {
-                  list.listItems.add(new Item.flag(focusFlag: true));
+                  list.addWithFlags(new Item.flag(focusFlag: true));
                 });
               },
             )
