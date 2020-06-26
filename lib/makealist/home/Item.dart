@@ -11,19 +11,14 @@ class Item extends StatefulWidget {
   }
   @override
   State<StatefulWidget> createState() {
-    return new ItemState(text);
+    return new ItemState();
   }
 }
 
 class ItemState extends State<Item> {
-  String text;
   Color itemAction = Colors.grey;
   Color rowColor = Color(0xFFFFD28E);
   TextEditingController _controller = new TextEditingController();
-
-  ItemState(String text){
-    this.text = text;
-  }
 
   double _getIconSize() {
     return MediaQuery.of(context).size.height >
@@ -44,7 +39,7 @@ class ItemState extends State<Item> {
 
   void _setText() {
     setState(() {
-      text = _controller.text;
+      widget.text = _controller.text;
     });
   }
 
@@ -53,7 +48,7 @@ class ItemState extends State<Item> {
     super.initState();
     _controller.addListener(_setText);
     setState(() {
-      _controller.text = text;
+      _controller.text = widget.text;
     });
   }
 
