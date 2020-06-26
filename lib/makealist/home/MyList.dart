@@ -25,7 +25,7 @@ class MyList{
 
   void removeWithFlags(int index) {
     listItems.removeAt(index);
-    if(listItems.isNotEmpty && index == (listItems.length)){
+    if(listItems.isNotEmpty && index == listItems.length){
       listItems.last.focusFlag = true;
     } else {
       listItems[index].focusFlag = true;
