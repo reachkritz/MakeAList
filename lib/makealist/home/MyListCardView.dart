@@ -123,7 +123,7 @@ class MyListCardViewState extends State<MyListCardView> {
               ),
               onPressed: () {
                 setState(() {
-                  list.listItems.add(new Item());
+                  list.listItems.add(new Item.flag(focusFlag: true));
                 });
               },
             )

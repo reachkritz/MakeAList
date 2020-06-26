@@ -11,7 +11,11 @@ class PersistorService{
   }
 
   void saveList(MyList list){
-    repo.saveItem(list);
+    repo.saveList(list);
+  }
+
+  void updateList(MyList list){
+    repo.updateList(list);
   }
 
   MyList getList(String key){

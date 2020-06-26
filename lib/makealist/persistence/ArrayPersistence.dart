@@ -7,14 +7,14 @@ class ArrayPersistence {
   List<MyList> db = new List();
 
   ArrayPersistence(){
-    MyList l1 = new MyList.header("Hindi Songs I can sing");
-    MyList l2 = new MyList.header("To Do List");
-    MyList l3 = new MyList.header("Movies I have to watch!");
-    MyList l4 = new MyList.header("Meeting Mintues - 16/6/2020");
-    MyList l5 = new MyList.header("Schedule for week");
+    MyList l1 = new MyList.header("Hindi Songs I can sing",0);
+    MyList l2 = new MyList.header("To Do List",1);
+    MyList l3 = new MyList.header("Movies I have to watch!",2);
+    MyList l4 = new MyList.header("Meeting Mintues - 16/6/2020",3);
+    MyList l5 = new MyList.header("Schedule for week",4);
     
-    l1.listItems.add(new Item.text("Sapna Jahan"));
-    l1.listItems.add(new Item.text("Emptiness"));
+    l1.listItems.add(new Item.text(text: 'Sapna Jahan'));
+    l1.listItems.add(new Item.text(text: 'Emptiness'));
 
     db.add(l1);
     db.add(l2);
@@ -23,8 +23,12 @@ class ArrayPersistence {
     db.add(l5);
   }
 
-  void saveItem(MyList list){
+  void saveList(MyList list){
     db.add(list);
+  }
+
+  void updateList(MyList list){
+    db[list.index] = list;
   }
 
   List<MyList> getAll(){

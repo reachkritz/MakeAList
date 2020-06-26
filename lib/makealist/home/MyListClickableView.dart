@@ -1,10 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:makealist/makealist/service/PersistorService.dart';
 
 import 'MyList.dart';
 import 'MyListCardView.dart';
 
 class MyListClickableView extends StatelessWidget {
+  PersistorService service = new PersistorService();
   MyList list;
   int index;
 
@@ -24,6 +26,10 @@ class MyListClickableView extends StatelessWidget {
                 shadowColor: Colors.black12,
                 color: Color(0xFFFFD28E),
                 child: new MyListCardView(list))));
+  }
+
+  void _updateList(){
+    service.updateList(list);
   }
 
   @override
@@ -54,7 +60,7 @@ class MyListClickableView extends StatelessWidget {
             builder: (context) {
               return _showCard(context);
             },
-          );
+          ).whenComplete(() => _updateList);
         });
   }
 }

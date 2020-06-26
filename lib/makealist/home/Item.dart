@@ -5,10 +5,10 @@ final _padding = EdgeInsets.all(5.0);
 
 class Item extends StatefulWidget {
   String text;
+  bool focusFlag = false;
   Item();
-  Item.text(String input){
-    text = input;
-  }
+  Item.flag({this.focusFlag});
+  Item.text({this.text});
   @override
   State<StatefulWidget> createState() {
     return new ItemState();
@@ -68,6 +68,7 @@ class ItemState extends State<Item> {
           width: MediaQuery.of(context).size.width * 0.45,
           child: TextField(
             controller: _controller,
+            autofocus: widget.focusFlag,
             style: TextStyle(
               color: Colors.brown,
               fontSize: 20,

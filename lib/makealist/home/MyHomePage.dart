@@ -27,12 +27,13 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   PersistorService service = new PersistorService();
   List<MyList> lists = new List();
-  MyList newList = new MyList();
+  MyList newList;
 
   @override
   void initState() {
     super.initState();
     _fetchLists();
+    newList = new MyList(lists.length);
   }
 
   void _submitList() {
@@ -41,7 +42,7 @@ class _MyHomePageState extends State<MyHomePage> {
         newList.listHeader = "New List - " + TimeOfDay.now().toString();
       }
       service.saveList(newList);
-      newList = new MyList();
+      newList = new MyList(lists.length);
     });
   }
 
