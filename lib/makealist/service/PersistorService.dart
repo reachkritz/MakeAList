@@ -1,8 +1,5 @@
 import 'package:makealist/makealist/home/MyList.dart';
-import 'package:makealist/makealist/home/MyListCardView.dart';
 import 'package:makealist/makealist/persistence/ArrayPersistence.dart';
-import 'package:makealist/makealist/persistence/FilePersistence.dart';
-import 'package:makealist/makealist/persistence/Repository.dart';
 
 class PersistorService{
   ArrayPersistence repo;

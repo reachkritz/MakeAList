@@ -9,6 +9,7 @@ class Item extends StatefulWidget {
   Item();
   Item.flag({this.focusFlag});
   Item.text({this.text});
+  Item.textFlag({this.text, this.focusFlag});
   @override
   State<StatefulWidget> createState() {
     return new ItemState();
@@ -23,8 +24,8 @@ class ItemState extends State<Item> {
   double _getIconSize() {
     return MediaQuery.of(context).size.height >
             MediaQuery.of(context).size.width
-        ? MediaQuery.of(context).size.width * 0.05
-        : MediaQuery.of(context).size.height * 0.05;
+        ? MediaQuery.of(context).size.width * 0.04
+        : MediaQuery.of(context).size.height * 0.04;
   }
 
   void _changeColor() {
@@ -65,7 +66,7 @@ class ItemState extends State<Item> {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         Container(
-          width: MediaQuery.of(context).size.width * 0.45,
+          width: MediaQuery.of(context).size.width * 0.52,
           child: TextField(
             controller: _controller,
             autofocus: widget.focusFlag,
@@ -90,7 +91,7 @@ class ItemState extends State<Item> {
 
     return Container(
         height: MediaQuery.of(context).size.height * 0.1,
-        width: MediaQuery.of(context).size.width * 0.55,
+        width: MediaQuery.of(context).size.width * 0.62,
         color: rowColor,
         child: itemRow
     );

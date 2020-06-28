@@ -81,7 +81,7 @@ class MyListCardViewState extends State<MyListCardView> {
                         labelText: 'Title...'))),
             Container(
               height: MediaQuery.of(context).size.height * 0.40,
-              width: MediaQuery.of(context).size.width * 0.70,
+              width: MediaQuery.of(context).size.width * 0.75,
               child: new ListView.builder(
                   itemCount: list.listItems.length,
                   itemBuilder: (BuildContext ctxt, int index) {
@@ -110,7 +110,7 @@ class MyListCardViewState extends State<MyListCardView> {
                       ),
                       onDismissed: (direction) {
                         setState(() {
-                          list.listItems.removeAt(index);
+                          list.removeWithFlags(index);
                         });
                       },
                     );

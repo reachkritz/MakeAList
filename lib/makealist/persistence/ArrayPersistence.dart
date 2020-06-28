@@ -13,8 +13,8 @@ class ArrayPersistence {
     MyList l4 = new MyList.header("Meeting Mintues - 16/6/2020",3);
     MyList l5 = new MyList.header("Schedule for week",4);
     
-    l1.listItems.add(new Item.text(text: 'Sapna Jahan'));
-    l1.listItems.add(new Item.text(text: 'Emptiness'));
+    l1.addWithFlags(new Item.textFlag(text: 'Sapna Jahan', focusFlag: true));
+    l1.addWithFlags(new Item.textFlag(text: 'Emptiness', focusFlag: true));
 
     db.add(l1);
     db.add(l2);
