@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -8,7 +10,7 @@ class MyListCardView extends StatefulWidget {
   MyList list;
   @override
   State<StatefulWidget> createState() {
-    return MyListCardViewState(list);
+    return MyListCardViewState();
   }
 
   MyListCardView(MyList underlyingList){
@@ -17,18 +19,16 @@ class MyListCardView extends StatefulWidget {
 }
 
 class MyListCardViewState extends State<MyListCardView> {
-  MyList list;
   List<int> selectedItems = new List();
   final _padding = EdgeInsets.all(5.0);
   TextEditingController _controller = new TextEditingController();
-
-  MyListCardViewState(MyList list){
-    this.list = list;
-  }
+  TextStyle textStyle;
+  TextPainter tp ;
+  bool firstLoad = true;
 
   void _setHeader() {
     setState(() {
-      list.listHeader = _controller.text;
+      widget.list.listHeader = _controller.text;
     });
   }
 
@@ -50,13 +50,46 @@ class MyListCardViewState extends State<MyListCardView> {
     super.initState();
     _controller.addListener(_setHeader);
     setState(() {
-      _controller.text = list.listHeader;
+      _controller.text = widget.list.listHeader;
     });
   }
 
+  TextStyle _changeTextSize(){
+    var fieldWidth = MediaQuery.of(context).size.width * 0.80 - 12.0;
+    TextSpan ts = new TextSpan(style: textStyle, text: _controller.text);
+    tp = new TextPainter(text: ts, textDirection: TextDirection.ltr);
+    tp.layout();
+    var textWidth = tp.width;
+    if(firstLoad){
+      setState(() {
+        textStyle = TextStyle(
+            color: Colors.brown,
+            fontSize: 50,
+            fontFamily: 'DancingScript');
+      });
+      firstLoad = false;
+    } else {
+      if((textWidth - fieldWidth) > 10){
+        print(textWidth.toString() + " " + fieldWidth.toString());
+        setState(() {
+          textStyle = TextStyle(
+              color: Colors.brown,
+              fontSize: max(textStyle.fontSize - 1, 25),
+              fontFamily: 'DancingScript');
+        });
+      } else if((textWidth - fieldWidth) < -10){
+        setState(() {
+          textStyle = TextStyle(
+              color: Colors.brown,
+              fontSize: min(textStyle.fontSize + 1, 50),
+              fontFamily: 'DancingScript');
+        });
+      }
+    }}
+
   @override
   Widget build(BuildContext context) {
-
+    _controller.addListener(_changeTextSize);
     final listView = new Padding(
         padding: EdgeInsets.all(1.0),
         child: Column(
@@ -64,28 +97,26 @@ class MyListCardViewState extends State<MyListCardView> {
             Padding(
                 padding: _padding * 2,
                 child: TextField(
-                    keyboardType: TextInputType.text,
-                    cursorColor: Colors.black38,
-                    maxLength: 50,
-                    maxLengthEnforced: true,
-                    controller: _controller,
-                    style: TextStyle(
-                        color: Colors.brown,
-                        fontSize: 50,
-                        fontFamily: 'DancingScript'),
-                    decoration: InputDecoration(
-                        labelStyle: TextStyle(
-                            color: Colors.brown,
-                            fontSize: 30,
-                            fontFamily: 'DancingScript'),
-                        labelText: 'Title...'))),
+                      keyboardType: TextInputType.text,
+                      cursorColor: Colors.black38,
+                      maxLength: 50,
+                      autofocus: false,
+                      maxLengthEnforced: true,
+                      controller: _controller,
+                      style: textStyle,
+                      decoration: InputDecoration(
+                          labelStyle: TextStyle(
+                              color: Colors.brown,
+                              fontSize: 30,
+                              fontFamily: 'DancingScript'),
+                          labelText: 'Title...'))),
             Container(
               height: MediaQuery.of(context).size.height * 0.40,
               width: MediaQuery.of(context).size.width * 0.75,
               child: new ListView.builder(
-                  itemCount: list.listItems.length,
+                  itemCount: widget.list.listItems.length,
                   itemBuilder: (BuildContext ctxt, int index) {
-                    final item = list.listItems[index];
+                    final item = widget.list.listItems[index];
                     return Dismissible(
                       key: UniqueKey(),
                       direction: DismissDirection.startToEnd,
@@ -93,7 +124,7 @@ class MyListCardViewState extends State<MyListCardView> {
                           padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.015),
                           child: Row(
                             children: [
-                              list.listItems[index],
+                              widget.list.listItems[index],
                               IconButton(
                                 iconSize: _getIconSize(),
                                 icon: Icon(
@@ -101,7 +132,7 @@ class MyListCardViewState extends State<MyListCardView> {
                                 ),
                                 onPressed: () {
                                   setState(() {
-                                    list.removeWithFlags(index);
+                                    widget.list.removeWithFlags(index);
                                   });
                                 },
                               )
@@ -110,7 +141,7 @@ class MyListCardViewState extends State<MyListCardView> {
                       ),
                       onDismissed: (direction) {
                         setState(() {
-                          list.removeWithFlags(index);
+                          widget.list.removeWithFlags(index);
                         });
                       },
                     );
@@ -123,7 +154,7 @@ class MyListCardViewState extends State<MyListCardView> {
               ),
               onPressed: () {
                 setState(() {
-                  list.addWithFlags(new Item.flag(focusFlag: true));
+                  widget.list.addWithFlags(new Item.flag(focusFlag: true));
                 });
               },
             )
