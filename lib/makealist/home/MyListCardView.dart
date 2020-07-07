@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
@@ -22,14 +23,14 @@ class MyListCardViewState extends State<MyListCardView> {
   List<int> selectedItems = new List();
   final _padding = EdgeInsets.all(5.0);
   TextEditingController _controller = new TextEditingController();
-  TextStyle textStyle;
+  TextStyle textStyle = TextStyle(
+      color: Colors.brown,
+      fontSize: 50,
+      fontFamily: 'DancingScript');
   TextPainter tp ;
-  bool firstLoad = true;
 
   void _setHeader() {
-    setState(() {
-      widget.list.listHeader = _controller.text;
-    });
+    widget.list.listHeader = _controller.text;
   }
 
   double _getIconSize() {
@@ -52,6 +53,24 @@ class MyListCardViewState extends State<MyListCardView> {
     setState(() {
       _controller.text = widget.list.listHeader;
     });
+    Timer.run(() {
+      _initializeTextStyle();
+    });
+    _controller.addListener(_changeTextSize);
+  }
+
+  _initializeTextStyle(){
+    var fieldWidth = MediaQuery.of(context).size.width * 0.80 - 12.0;
+    TextSpan ts = new TextSpan(style: textStyle, text: _controller.text);
+    tp = new TextPainter(text: ts, textDirection: TextDirection.ltr);
+    tp.layout();
+    var textWidth = tp.width;
+      setState(() {
+        textStyle = TextStyle(
+            color: Colors.brown,
+            fontSize: 50*fieldWidth/textWidth,
+            fontFamily: 'DancingScript');
+      });
   }
 
   TextStyle _changeTextSize(){
@@ -60,36 +79,25 @@ class MyListCardViewState extends State<MyListCardView> {
     tp = new TextPainter(text: ts, textDirection: TextDirection.ltr);
     tp.layout();
     var textWidth = tp.width;
-    if(firstLoad){
-      setState(() {
-        textStyle = TextStyle(
-            color: Colors.brown,
-            fontSize: 50,
-            fontFamily: 'DancingScript');
-      });
-      firstLoad = false;
-    } else {
-      if((textWidth - fieldWidth) > 10){
-        print(textWidth.toString() + " " + fieldWidth.toString());
+      if((textWidth - fieldWidth) > 5){
+     //   print(textWidth.toString() + " " + fieldWidth.toString());
         setState(() {
           textStyle = TextStyle(
               color: Colors.brown,
-              fontSize: max(textStyle.fontSize - 1, 25),
+              fontSize: max(textStyle.fontSize - 2, 25),
               fontFamily: 'DancingScript');
         });
-      } else if((textWidth - fieldWidth) < -10){
+      } else if((textWidth - fieldWidth) < -5){
         setState(() {
           textStyle = TextStyle(
               color: Colors.brown,
-              fontSize: min(textStyle.fontSize + 1, 50),
+              fontSize: min(textStyle.fontSize + 2, 50),
               fontFamily: 'DancingScript');
         });
-      }
     }}
 
   @override
   Widget build(BuildContext context) {
-    _controller.addListener(_changeTextSize);
     final listView = new Padding(
         padding: EdgeInsets.all(1.0),
         child: Column(
@@ -100,7 +108,6 @@ class MyListCardViewState extends State<MyListCardView> {
                       keyboardType: TextInputType.text,
                       cursorColor: Colors.black38,
                       maxLength: 50,
-                      autofocus: false,
                       maxLengthEnforced: true,
                       controller: _controller,
                       style: textStyle,
