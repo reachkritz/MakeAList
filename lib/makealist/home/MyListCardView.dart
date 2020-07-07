@@ -9,12 +9,13 @@ import 'MyList.dart';
 
 class MyListCardView extends StatefulWidget {
   MyList list;
+
   @override
   State<StatefulWidget> createState() {
     return MyListCardViewState();
   }
 
-  MyListCardView(MyList underlyingList){
+  MyListCardView(MyList underlyingList) {
     list = underlyingList;
   }
 }
@@ -27,17 +28,32 @@ class MyListCardViewState extends State<MyListCardView> {
       color: Colors.brown,
       fontSize: 50,
       fontFamily: 'DancingScript');
-  TextPainter tp ;
+  TextPainter tp;
+
+  bool overflowFlag = false;
+  bool underflowFlag = false;
 
   void _setHeader() {
     widget.list.listHeader = _controller.text;
   }
 
   double _getIconSize() {
-    return MediaQuery.of(context).size.height >
-        MediaQuery.of(context).size.width
-        ? MediaQuery.of(context).size.width * 0.05
-        : MediaQuery.of(context).size.height * 0.05;
+    return MediaQuery
+        .of(context)
+        .size
+        .height >
+        MediaQuery
+            .of(context)
+            .size
+            .width
+        ? MediaQuery
+        .of(context)
+        .size
+        .width * 0.05
+        : MediaQuery
+        .of(context)
+        .size
+        .height * 0.05;
   }
 
   @override
@@ -47,7 +63,7 @@ class MyListCardViewState extends State<MyListCardView> {
   }
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
     _controller.addListener(_setHeader);
     setState(() {
@@ -59,52 +75,83 @@ class MyListCardViewState extends State<MyListCardView> {
     _controller.addListener(_changeTextSize);
   }
 
-  _initializeTextStyle(){
-    var fieldWidth = MediaQuery.of(context).size.width * 0.80 - 12.0;
+  _initializeTextStyle() {
+    var fieldWidth = MediaQuery
+        .of(context)
+        .size
+        .width * 0.80 - 12.0;
+    double textWidth = _findTextWidth();
+    var fontsize = min(50, (50 * fieldWidth / textWidth) * 0.3);
+    fontsize = max(fontsize, 25);
+    setState(() {
+      textStyle = TextStyle(
+          color: Colors.brown,
+          fontSize: fontsize,
+          fontFamily: 'DancingScript');
+    });
+    //After altering the size, we will check for font size limits
+    if(fontsize == 50) {
+      underflowFlag = true;
+    } else if(fontsize == 25){
+      overflowFlag = true;
+    }
+  }
+
+  double _findTextWidth() {
     TextSpan ts = new TextSpan(style: textStyle, text: _controller.text);
     tp = new TextPainter(text: ts, textDirection: TextDirection.ltr);
     tp.layout();
     var textWidth = tp.width;
+    return textWidth;
+  }
+
+  TextStyle _changeTextSize() {
+    var fieldWidth = MediaQuery
+        .of(context)
+        .size
+        .width * 0.80 - 12.0;
+    double textWidth = _findTextWidth();
+    var size;
+    if (!overflowFlag && (textWidth - fieldWidth) > 5) {
+      size = max(textStyle.fontSize - 1, 25);
       setState(() {
         textStyle = TextStyle(
             color: Colors.brown,
-            fontSize: 50*fieldWidth/textWidth,
+            fontSize: size,
             fontFamily: 'DancingScript');
       });
+      if(size == 25){
+         overflowFlag = true;
+      }
+      if(size < 50){
+        underflowFlag = false;
+      }
+    } else if (!underflowFlag && (textWidth - fieldWidth) < -5) {
+      size = min(textStyle.fontSize + 1, 50);
+      setState(() {
+        textStyle = TextStyle(
+            color: Colors.brown,
+            fontSize: size,
+            fontFamily: 'DancingScript');
+      });
+      if(size == 50){
+        underflowFlag = true;
+      }
+      if(size > 25){
+        overflowFlag = false;
+      }
+    }
   }
-
-  TextStyle _changeTextSize(){
-    var fieldWidth = MediaQuery.of(context).size.width * 0.80 - 12.0;
-    TextSpan ts = new TextSpan(style: textStyle, text: _controller.text);
-    tp = new TextPainter(text: ts, textDirection: TextDirection.ltr);
-    tp.layout();
-    var textWidth = tp.width;
-      if((textWidth - fieldWidth) > 5){
-     //   print(textWidth.toString() + " " + fieldWidth.toString());
-        setState(() {
-          textStyle = TextStyle(
-              color: Colors.brown,
-              fontSize: max(textStyle.fontSize - 2, 25),
-              fontFamily: 'DancingScript');
-        });
-      } else if((textWidth - fieldWidth) < -5){
-        setState(() {
-          textStyle = TextStyle(
-              color: Colors.brown,
-              fontSize: min(textStyle.fontSize + 2, 50),
-              fontFamily: 'DancingScript');
-        });
-    }}
 
   @override
   Widget build(BuildContext context) {
     final listView = new Padding(
         padding: EdgeInsets.all(1.0),
         child: Column(
-          children: [
-            Padding(
-                padding: _padding * 2,
-                child: TextField(
+            children: [
+              Padding(
+                  padding: _padding * 2,
+                  child: TextField(
                       keyboardType: TextInputType.text,
                       cursorColor: Colors.black38,
                       maxLength: 50,
@@ -117,62 +164,77 @@ class MyListCardViewState extends State<MyListCardView> {
                               fontSize: 30,
                               fontFamily: 'DancingScript'),
                           labelText: 'Title...'))),
-            Container(
-              height: MediaQuery.of(context).size.height * 0.40,
-              width: MediaQuery.of(context).size.width * 0.75,
-              child: new ListView.builder(
-                  itemCount: widget.list.listItems.length,
-                  itemBuilder: (BuildContext ctxt, int index) {
-                    final item = widget.list.listItems[index];
-                    return Dismissible(
-                      key: UniqueKey(),
-                      direction: DismissDirection.startToEnd,
-                      child: Padding(
-                          padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.015),
-                          child: Row(
-                            children: [
-                              widget.list.listItems[index],
-                              IconButton(
-                                iconSize: _getIconSize(),
-                                icon: Icon(
-                                  Icons.delete_forever,
-                                ),
-                                onPressed: () {
-                                  setState(() {
-                                    widget.list.removeWithFlags(index);
-                                  });
-                                },
+              Container(
+                  height: MediaQuery
+                      .of(context)
+                      .size
+                      .height * 0.40,
+                  width: MediaQuery
+                      .of(context)
+                      .size
+                      .width * 0.75,
+                  child: new ListView.builder(
+                      itemCount: widget.list.listItems.length,
+                      itemBuilder: (BuildContext ctxt, int index) {
+                        final item = widget.list.listItems[index];
+                        return Dismissible(
+                          key: UniqueKey(),
+                          direction: DismissDirection.startToEnd,
+                          child: Padding(
+                              padding: EdgeInsets.all(MediaQuery
+                                  .of(context)
+                                  .size
+                                  .width * 0.015),
+                              child: Row(
+                                children: [
+                                  widget.list.listItems[index],
+                                  IconButton(
+                                    iconSize: _getIconSize(),
+                                    icon: Icon(
+                                      Icons.delete_forever,
+                                    ),
+                                    onPressed: () {
+                                      setState(() {
+                                        widget.list.removeWithFlags(index);
+                                      });
+                                    },
+                                  )
+                                ],
                               )
-                            ],
-                          )
-                      ),
-                      onDismissed: (direction) {
-                        setState(() {
-                          widget.list.removeWithFlags(index);
-                        });
-                      },
-                    );
-                  })
-            ),
-            IconButton(
-              icon: Icon(
-                Icons.add,
-                size: _getIconSize(),
+                          ),
+                          onDismissed: (direction) {
+                            setState(() {
+                              widget.list.removeWithFlags(index);
+                            });
+                          },
+                        );
+                      })
               ),
-              onPressed: () {
-                setState(() {
-                  widget.list.addWithFlags(new Item.flag(focusFlag: true));
-                });
-              },
-            )
-          ]
+              IconButton(
+                icon: Icon(
+                  Icons.add,
+                  size: _getIconSize(),
+                ),
+                onPressed: () {
+                  setState(() {
+                    widget.list.addWithFlags(new Item.flag(focusFlag: true));
+                  });
+                },
+              )
+            ]
         ));
     return Center(
-      child: Container(
-        width: MediaQuery.of(context).size.width * 0.80,
-        height: MediaQuery.of(context).size.height * 0.70,
-        child: listView,
-      )
+        child: Container(
+          width: MediaQuery
+              .of(context)
+              .size
+              .width * 0.80,
+          height: MediaQuery
+              .of(context)
+              .size
+              .height * 0.70,
+          child: listView,
+        )
     );
   }
 }
