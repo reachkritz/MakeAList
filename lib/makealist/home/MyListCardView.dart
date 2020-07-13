@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:makealist/makealist/home/CircleProgress.dart';
 
 import 'Item.dart';
 import 'MyList.dart';
@@ -22,6 +23,7 @@ class MyListCardView extends StatefulWidget {
 
 class MyListCardViewState extends State<MyListCardView> {
   List<int> selectedItems = new List();
+  double efficiency = 80;
   final _padding = EdgeInsets.all(5.0);
   TextEditingController _controller = new TextEditingController();
   TextStyle textStyle = TextStyle(
@@ -65,6 +67,7 @@ class MyListCardViewState extends State<MyListCardView> {
   @override
   void initState() {
     super.initState();
+    widget.list.addListener(_calculateEfficiency);
     _controller.addListener(_setHeader);
     setState(() {
       _controller.text = widget.list.listHeader;
@@ -73,6 +76,16 @@ class MyListCardViewState extends State<MyListCardView> {
       _initializeTextStyle();
     });
     _controller.addListener(_changeTextSize);
+  }
+
+  _calculateEfficiency(){
+    int count = 0;
+    widget.list.listItems.forEach((element) {
+      if(element.itemAction == Colors.green){
+        count++;
+      }
+    });
+    efficiency = count/widget.list.listItems.length;
   }
 
   _initializeTextStyle() {
@@ -151,7 +164,11 @@ class MyListCardViewState extends State<MyListCardView> {
             children: [
               Padding(
                   padding: _padding * 2,
-                  child: TextField(
+                  child: Row(
+                    children: [
+                      Container(
+                       width: MediaQuery.of(context).size.width * 0.50,
+                      child : TextField(
                       keyboardType: TextInputType.text,
                       cursorColor: Colors.black38,
                       maxLength: 50,
@@ -164,6 +181,15 @@ class MyListCardViewState extends State<MyListCardView> {
                               fontSize: 30,
                               fontFamily: 'DancingScript'),
                           labelText: 'Title...'))),
+                      CustomPaint(
+                        foregroundPainter: CircleProgress(efficiency),
+                        child: Container(
+                          width: MediaQuery.of(context).size.width * 0.22,
+                          height: MediaQuery.of(context).size.width * 0.22
+                        )
+                      )
+                    ],
+                  )),
               Container(
                   height: MediaQuery
                       .of(context)
@@ -188,16 +214,12 @@ class MyListCardViewState extends State<MyListCardView> {
                               child: Row(
                                 children: [
                                   widget.list.listItems[index],
-                                  IconButton(
-                                    iconSize: _getIconSize(),
-                                    icon: Icon(
-                                      Icons.delete_forever,
-                                    ),
-                                    onPressed: () {
-                                      setState(() {
-                                        widget.list.removeWithFlags(index);
-                                      });
-                                    },
+                                  GestureDetector( onTap: () {
+                                    setState(() {
+                                      widget.list.removeWithFlags(index);
+                                    });
+                                  },
+                                      child: Icon(Icons.delete_forever),
                                   )
                                 ],
                               )

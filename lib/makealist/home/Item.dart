@@ -6,6 +6,7 @@ final _padding = EdgeInsets.all(5.0);
 class Item extends StatefulWidget {
   String text;
   bool focusFlag = false;
+  Color itemAction;
   Item();
   Item.flag({this.focusFlag});
   Item.text({this.text});
@@ -17,26 +18,8 @@ class Item extends StatefulWidget {
 }
 
 class ItemState extends State<Item> {
-  Color itemAction = Colors.grey;
-  Color rowColor = Color(0xFFFFD28E);
+  Color rowColor = Color(0xFFFFE1B0);
   TextEditingController _controller = new TextEditingController();
-
-  double _getIconSize() {
-    return MediaQuery.of(context).size.height >
-            MediaQuery.of(context).size.width
-        ? MediaQuery.of(context).size.width * 0.04
-        : MediaQuery.of(context).size.height * 0.04;
-  }
-
-  void _changeColor() {
-    setState(() {
-      if(rowColor == Color(0xFFFFD28E)){
-        rowColor = Colors.cyan;
-      } else {
-        rowColor = Color(0xFFFFD28E);
-      }
-    });
-  }
 
   void _setText() {
     setState(() {
@@ -50,6 +33,7 @@ class ItemState extends State<Item> {
     _controller.addListener(_setText);
     setState(() {
       _controller.text = widget.text;
+      widget.itemAction = widget.itemAction == null ? Colors.white : widget.itemAction;
     });
   }
 
@@ -66,7 +50,7 @@ class ItemState extends State<Item> {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         Container(
-          width: MediaQuery.of(context).size.width * 0.52,
+          width: MediaQuery.of(context).size.width * 0.60,
           child: TextField(
             controller: _controller,
             autofocus: widget.focusFlag,
@@ -76,22 +60,19 @@ class ItemState extends State<Item> {
             ),
           ),
         ),
-        IconButton(
-          hoverColor: Colors.black12,
-          focusColor: Colors.blueGrey,
-          iconSize: _getIconSize(),
-          icon: Icon(
+        GestureDetector(
+          onTap: _toggleAction,
+          child: Icon(
             Icons.check_circle,
-            color: itemAction,
+            color: widget.itemAction,
           ),
-          onPressed: _toggleAction,
         )
       ],
     );
 
     return Container(
         height: MediaQuery.of(context).size.height * 0.1,
-        width: MediaQuery.of(context).size.width * 0.62,
+        width: MediaQuery.of(context).size.width * 0.66,
         color: rowColor,
         child: itemRow
     );
@@ -99,10 +80,10 @@ class ItemState extends State<Item> {
 
   void _toggleAction() {
     setState(() {
-      if (itemAction == Colors.grey) {
-        itemAction = Colors.green;
+      if (widget.itemAction == Colors.white) {
+        widget.itemAction = Colors.green;
       } else {
-        itemAction = Colors.grey;
+        widget.itemAction = Colors.white;
       }
     });
   }

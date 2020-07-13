@@ -24,7 +24,7 @@ class MyListClickableView extends StatelessWidget {
                 elevation: 5.0,
                 borderOnForeground: true,
                 shadowColor: Colors.black12,
-                color: Color(0xFFFFD28E),
+                color: Color(0xFFFFE1B0),
                 child: new MyListCardView(list))));
   }
 
@@ -36,13 +36,13 @@ class MyListClickableView extends StatelessWidget {
   Widget build(BuildContext context) {
     return FloatingActionButton(
         heroTag: index.toString(),
-        shape: RoundedRectangleBorder(),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5.0))),
         elevation: 0.2,
         child: Container(
           alignment: Alignment.center,
           height: MediaQuery.of(context).size.height * 0.4,
           width: MediaQuery.of(context).size.width * 0.4,
-          color: Color(0xFFFFD28E),
+          color: Color(0xFFFFE1B0),
           child: Padding(
             padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.04),
             child: Text(

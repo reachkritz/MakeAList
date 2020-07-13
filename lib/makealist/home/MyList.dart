@@ -1,6 +1,8 @@
+import 'package:flutter/material.dart';
+
 import 'Item.dart';
 
-class MyList{
+class MyList with ChangeNotifier{
   int index;
   String listHeader;
   List<Item> listItems;
@@ -21,6 +23,7 @@ class MyList{
        listItems.last.focusFlag = false;
      }
      listItems.add(item);
+     notifyListeners();
   }
 
   void removeWithFlags(int index) {
@@ -30,5 +33,6 @@ class MyList{
     } else {
       listItems[index].focusFlag = true;
     }
+    notifyListeners();
   }
 }
