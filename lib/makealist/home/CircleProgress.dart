@@ -15,12 +15,12 @@ class CircleProgress extends CustomPainter{
     //this is base circle
     Paint outerCircle = Paint()
       ..strokeWidth = 10
-      ..color = Colors.black
+      ..color = Colors.white
       ..style = PaintingStyle.stroke;
 
     Paint completeArc = Paint()
       ..strokeWidth = 10
-      ..color = Colors.redAccent
+      ..color = Colors.lightGreen
       ..style = PaintingStyle.stroke
       ..strokeCap  = StrokeCap.round;
 

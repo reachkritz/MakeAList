@@ -18,7 +18,7 @@ class Item extends StatefulWidget {
 }
 
 class ItemState extends State<Item> {
-  Color rowColor = Color(0xFFFFE1B0);
+  Color rowColor = Colors.white;
   TextEditingController _controller = new TextEditingController();
 
   void _setText() {
@@ -33,7 +33,7 @@ class ItemState extends State<Item> {
     _controller.addListener(_setText);
     setState(() {
       _controller.text = widget.text;
-      widget.itemAction = widget.itemAction == null ? Colors.white : widget.itemAction;
+      widget.itemAction = widget.itemAction == null ? Colors.grey : widget.itemAction;
     });
   }
 
@@ -55,7 +55,7 @@ class ItemState extends State<Item> {
             controller: _controller,
             autofocus: widget.focusFlag,
             style: TextStyle(
-              color: Colors.brown,
+              color: Colors.black54,
               fontSize: 20,
             ),
           ),
@@ -80,10 +80,10 @@ class ItemState extends State<Item> {
 
   void _toggleAction() {
     setState(() {
-      if (widget.itemAction == Colors.white) {
-        widget.itemAction = Colors.green;
+      if (widget.itemAction == Colors.grey) {
+        widget.itemAction = Colors.lightGreen;
       } else {
-        widget.itemAction = Colors.white;
+        widget.itemAction = Colors.grey;
       }
     });
   }

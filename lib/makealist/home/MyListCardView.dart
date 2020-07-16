@@ -24,12 +24,12 @@ class MyListCardView extends StatefulWidget {
 class MyListCardViewState extends State<MyListCardView> {
   List<int> selectedItems = new List();
   double efficiency = 80;
-  final _padding = EdgeInsets.all(5.0);
+  final _padding = EdgeInsets.only( top : 35.0, bottom: 5.0,left: 5.0, right: 5.0);
   TextEditingController _controller = new TextEditingController();
   TextStyle textStyle = TextStyle(
-      color: Colors.brown,
+      color: Colors.white,
       fontSize: 50,
-      fontFamily: 'DancingScript');
+      fontFamily: 'Raleway');
   TextPainter tp;
 
   bool overflowFlag = false;
@@ -98,9 +98,9 @@ class MyListCardViewState extends State<MyListCardView> {
     fontsize = max(fontsize, 25);
     setState(() {
       textStyle = TextStyle(
-          color: Colors.brown,
+          color: Colors.white,
           fontSize: fontsize,
-          fontFamily: 'DancingScript');
+          fontFamily: 'Raleway');
     });
     //After altering the size, we will check for font size limits
     if(fontsize == 50) {
@@ -129,9 +129,9 @@ class MyListCardViewState extends State<MyListCardView> {
       size = max(textStyle.fontSize - 1, 25);
       setState(() {
         textStyle = TextStyle(
-            color: Colors.brown,
+            color: Colors.white,
             fontSize: size,
-            fontFamily: 'DancingScript');
+            fontFamily: 'Raleway');
       });
       if(size == 25){
          overflowFlag = true;
@@ -143,9 +143,9 @@ class MyListCardViewState extends State<MyListCardView> {
       size = min(textStyle.fontSize + 1, 50);
       setState(() {
         textStyle = TextStyle(
-            color: Colors.brown,
+            color: Colors.white,
             fontSize: size,
-            fontFamily: 'DancingScript');
+            fontFamily: 'Raleway');
       });
       if(size == 50){
         underflowFlag = true;
@@ -158,38 +158,39 @@ class MyListCardViewState extends State<MyListCardView> {
 
   @override
   Widget build(BuildContext context) {
-    final listView = new Padding(
-        padding: EdgeInsets.all(1.0),
-        child: Column(
+    final listView = Column(
             children: [
-              Padding(
-                  padding: _padding * 2,
+              Container(
+                color: Colors.red,
+                  padding: _padding,
                   child: Row(
-                    children: [
-                      Container(
-                       width: MediaQuery.of(context).size.width * 0.50,
-                      child : TextField(
-                      keyboardType: TextInputType.text,
-                      cursorColor: Colors.black38,
-                      maxLength: 50,
-                      maxLengthEnforced: true,
-                      controller: _controller,
-                      style: textStyle,
-                      decoration: InputDecoration(
-                          labelStyle: TextStyle(
-                              color: Colors.brown,
-                              fontSize: 30,
-                              fontFamily: 'DancingScript'),
-                          labelText: 'Title...'))),
-                      CustomPaint(
-                        foregroundPainter: CircleProgress(efficiency),
-                        child: Container(
-                          width: MediaQuery.of(context).size.width * 0.22,
-                          height: MediaQuery.of(context).size.width * 0.22
+                      children: [
+                        Container(
+                            width: MediaQuery.of(context).size.width * 0.50,
+                            child : TextField(
+                                keyboardType: TextInputType.text,
+                                cursorColor: Colors.white,
+                                maxLength: 50,
+                                maxLengthEnforced: true,
+                                controller: _controller,
+                                style: textStyle,
+                                decoration: InputDecoration.collapsed(
+                                     hintText: "Title...",
+                                     hintStyle: TextStyle(
+                                         fontSize: 20,
+                                         color: Colors.white,
+                                     ),
+                                    ))),
+                        CustomPaint(
+                            foregroundPainter: CircleProgress(efficiency),
+                            child: Container(
+                                width: MediaQuery.of(context).size.width * 0.22,
+                                height: MediaQuery.of(context).size.width * 0.22
+                            )
                         )
-                      )
-                    ],
-                  )),
+                      ],
+                    ),
+                  ),
               Container(
                   height: MediaQuery
                       .of(context)
@@ -244,19 +245,9 @@ class MyListCardViewState extends State<MyListCardView> {
                 },
               )
             ]
-        ));
+        );
     return Center(
-        child: Container(
-          width: MediaQuery
-              .of(context)
-              .size
-              .width * 0.80,
-          height: MediaQuery
-              .of(context)
-              .size
-              .height * 0.70,
-          child: listView,
-        )
+        child: listView
     );
   }
 }

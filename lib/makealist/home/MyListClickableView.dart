@@ -24,7 +24,7 @@ class MyListClickableView extends StatelessWidget {
                 elevation: 5.0,
                 borderOnForeground: true,
                 shadowColor: Colors.black12,
-                color: Color(0xFFFFE1B0),
+                color: Colors.white,
                 child: new MyListCardView(list))));
   }
 

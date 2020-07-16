@@ -55,7 +55,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 elevation: 5.0,
                 borderOnForeground: true,
                 shadowColor: Colors.black12,
-                color: Color(0xFFFFE1B0),
+                color: Colors.white,
                 child: Column(
                   children: [
                     new MyListCardView(newList),
