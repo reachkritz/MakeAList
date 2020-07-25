@@ -48,9 +48,9 @@ class MyListClickableView extends StatelessWidget {
             child: Text(
               list.listHeader,
               style: TextStyle(
-                  color: Colors.brown,
+                  color: Colors.black,
                   fontSize: 30,
-                  fontFamily: 'DancingScript'),
+                  fontFamily: 'Raleway'),
             ),
           ),
         ),

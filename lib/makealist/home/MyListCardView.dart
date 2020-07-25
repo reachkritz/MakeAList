@@ -79,6 +79,7 @@ class MyListCardViewState extends State<MyListCardView> {
     _calculateEfficiency();
   }
 
+  //Callback function to compute efficiency upon updates from the underlying list object
   _calculateEfficiency(){
     int count = 0;
     widget.list.listItems.forEach((element) {
@@ -86,9 +87,11 @@ class MyListCardViewState extends State<MyListCardView> {
         count++;
       }
     });
-    setState(() {
-      efficiency = count/widget.list.listItems.length;
-    });
+    if(widget.list.listItems.length != 0) {
+      setState(() {
+        efficiency = count / widget.list.listItems.length;
+      });
+    }
   }
 
   _initializeTextStyle() {
