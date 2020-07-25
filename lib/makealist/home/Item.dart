@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 final _padding = EdgeInsets.all(5.0);
 
-class Item extends StatefulWidget {
+class Item extends StatefulWidget with ChangeNotifier{
   String text;
   bool focusFlag = false;
   Color itemAction;
@@ -15,9 +15,13 @@ class Item extends StatefulWidget {
   State<StatefulWidget> createState() {
     return new ItemState();
   }
+
+  void onChange(){
+    notifyListeners();
+  }
 }
 
-class ItemState extends State<Item> {
+class ItemState extends State<Item>{
   Color rowColor = Colors.white;
   TextEditingController _controller = new TextEditingController();
 
@@ -86,5 +90,6 @@ class ItemState extends State<Item> {
         widget.itemAction = Colors.grey;
       }
     });
+    widget.onChange();
   }
 }

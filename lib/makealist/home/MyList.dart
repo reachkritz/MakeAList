@@ -19,11 +19,16 @@ class MyList with ChangeNotifier{
   }
 
   void addWithFlags(Item item) {
+     item.addListener(_recomputeEfficiency);//notify listeners incase of toggle
      if(listItems.isNotEmpty){
        listItems.last.focusFlag = false;
      }
      listItems.add(item);
-     notifyListeners();
+     _recomputeEfficiency(); //notify listeners incase of adding new items to list
+  }
+
+  _recomputeEfficiency(){
+    notifyListeners();
   }
 
   void removeWithFlags(int index) {
@@ -33,6 +38,6 @@ class MyList with ChangeNotifier{
     } else {
       listItems[index].focusFlag = true;
     }
-    notifyListeners();
+    _recomputeEfficiency(); //notify listeners incase of deleting items from list
   }
 }

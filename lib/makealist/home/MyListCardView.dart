@@ -3,7 +3,7 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:makealist/makealist/home/CircleProgress.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
 
 import 'Item.dart';
 import 'MyList.dart';
@@ -23,11 +23,11 @@ class MyListCardView extends StatefulWidget {
 
 class MyListCardViewState extends State<MyListCardView> {
   List<int> selectedItems = new List();
-  double efficiency = 80;
+  double efficiency = 0.0;
   final _padding = EdgeInsets.only( top : 35.0, bottom: 5.0,left: 5.0, right: 5.0);
   TextEditingController _controller = new TextEditingController();
   TextStyle textStyle = TextStyle(
-      color: Colors.white,
+      color: Colors.black,
       fontSize: 50,
       fontFamily: 'Raleway');
   TextPainter tp;
@@ -76,16 +76,19 @@ class MyListCardViewState extends State<MyListCardView> {
       _initializeTextStyle();
     });
     _controller.addListener(_changeTextSize);
+    _calculateEfficiency();
   }
 
   _calculateEfficiency(){
     int count = 0;
     widget.list.listItems.forEach((element) {
-      if(element.itemAction == Colors.green){
+      if(element.itemAction == Colors.lightGreen){
         count++;
       }
     });
-    efficiency = count/widget.list.listItems.length;
+    setState(() {
+      efficiency = count/widget.list.listItems.length;
+    });
   }
 
   _initializeTextStyle() {
@@ -98,7 +101,7 @@ class MyListCardViewState extends State<MyListCardView> {
     fontsize = max(fontsize, 25);
     setState(() {
       textStyle = TextStyle(
-          color: Colors.white,
+          color: Colors.black,
           fontSize: fontsize,
           fontFamily: 'Raleway');
     });
@@ -129,7 +132,7 @@ class MyListCardViewState extends State<MyListCardView> {
       size = max(textStyle.fontSize - 1, 25);
       setState(() {
         textStyle = TextStyle(
-            color: Colors.white,
+            color: Colors.black,
             fontSize: size,
             fontFamily: 'Raleway');
       });
@@ -143,7 +146,7 @@ class MyListCardViewState extends State<MyListCardView> {
       size = min(textStyle.fontSize + 1, 50);
       setState(() {
         textStyle = TextStyle(
-            color: Colors.white,
+            color: Colors.black,
             fontSize: size,
             fontFamily: 'Raleway');
       });
@@ -161,7 +164,7 @@ class MyListCardViewState extends State<MyListCardView> {
     final listView = Column(
             children: [
               Container(
-                color: Colors.red,
+                color: Colors.yellow,
                   padding: _padding,
                   child: Row(
                       children: [
@@ -169,7 +172,7 @@ class MyListCardViewState extends State<MyListCardView> {
                             width: MediaQuery.of(context).size.width * 0.50,
                             child : TextField(
                                 keyboardType: TextInputType.text,
-                                cursorColor: Colors.white,
+                                cursorColor: Colors.black,
                                 maxLength: 50,
                                 maxLengthEnforced: true,
                                 controller: _controller,
@@ -178,15 +181,25 @@ class MyListCardViewState extends State<MyListCardView> {
                                      hintText: "Title...",
                                      hintStyle: TextStyle(
                                          fontSize: 20,
-                                         color: Colors.white,
+                                         color: Colors.black,
                                      ),
                                     ))),
-                        CustomPaint(
-                            foregroundPainter: CircleProgress(efficiency),
-                            child: Container(
+                        Container(
                                 width: MediaQuery.of(context).size.width * 0.22,
-                                height: MediaQuery.of(context).size.width * 0.22
-                            )
+                                height: MediaQuery.of(context).size.width * 0.22,
+                          child: new CircularPercentIndicator(
+                            radius: MediaQuery.of(context).size.width * 0.19,
+                            lineWidth: 13.0,
+                            animation: true,
+                            percent: efficiency,
+                            center: new Text(
+                              makeText(efficiency),
+                              style:
+                              new TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0, color: Colors.black),
+                            ),
+                            circularStrokeCap: CircularStrokeCap.round,
+                            progressColor: Colors.purple,
+                          ),
                         )
                       ],
                     ),
@@ -249,5 +262,9 @@ class MyListCardViewState extends State<MyListCardView> {
     return Center(
         child: listView
     );
+  }
+
+  String makeText(double efficiency) {
+    return (efficiency*100).toStringAsFixed(2) + "%";
   }
 }
