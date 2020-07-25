@@ -252,9 +252,11 @@ class MyListCardViewState extends State<MyListCardView> {
                   size: _getIconSize(),
                 ),
                 onPressed: () {
-                  setState(() {
-                    widget.list.addWithFlags(new Item.flag(focusFlag: true));
-                  });
+                  if(_noEmptyItemAlready()){
+                    setState(() {
+                      widget.list.addWithFlags(new Item.flag(focusFlag: true));
+                    });
+                  }
                 },
               )
             ]
@@ -262,6 +264,16 @@ class MyListCardViewState extends State<MyListCardView> {
     return Center(
         child: listView
     );
+  }
+
+  //Utility function to disallow addition of a new item to the list in case there are already empty items
+  bool _noEmptyItemAlready(){
+    for(Item item in widget.list.listItems){
+      if(item.text == null || item.text.isEmpty){
+        return false;
+      }
+    }
+    return true;
   }
 
   String makeText(double efficiency) {
