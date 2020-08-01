@@ -19,7 +19,7 @@ class MyListClickableView extends StatelessWidget {
     return new Center(
         child: Container(
             height: MediaQuery.of(context).size.height*0.80,
-            width: MediaQuery.of(context).size.width*0.80,
+            width: MediaQuery.of(context).size.width*0.85,
             child: new Card(
                 elevation: 5.0,
                 borderOnForeground: true,
@@ -40,7 +40,7 @@ class MyListClickableView extends StatelessWidget {
         elevation: 0.2,
         child: Container(
           alignment: Alignment.center,
-          height: MediaQuery.of(context).size.height * 0.4,
+          height: MediaQuery.of(context).size.height * 0.3,
           width: MediaQuery.of(context).size.width * 0.4,
           color: Color(0xFFFFE1B0),
           child: Padding(

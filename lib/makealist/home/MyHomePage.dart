@@ -50,7 +50,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return new Center(
         child: Container(
             height: MediaQuery.of(context).size.height * 0.80,
-            width: MediaQuery.of(context).size.width * 0.80,
+            width: MediaQuery.of(context).size.width * 0.85,
             child: Card(
                 elevation: 5.0,
                 borderOnForeground: true,
@@ -87,23 +87,23 @@ class _MyHomePageState extends State<MyHomePage> {
           child: CustomScrollView(slivers: <Widget>[
             const SliverAppBar(
               pinned: true,
-              expandedHeight: 250.0,
+              expandedHeight: 150.0,
               flexibleSpace: FlexibleSpaceBar(
                 title: Text('To-Do Lists'),
               ),
             ),
             SliverGrid(
               gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                maxCrossAxisExtent: 400.0,
-                mainAxisSpacing: MediaQuery.of(context).size.height * 0.03,
-                crossAxisSpacing: MediaQuery.of(context).size.width * 0.04,
-                childAspectRatio: 0.75,
+                maxCrossAxisExtent: MediaQuery.of(context).size.width/2,
+                mainAxisSpacing: MediaQuery.of(context).size.height * 0.01,
+                crossAxisSpacing: MediaQuery.of(context).size.width * 0.01,
+                childAspectRatio: 0.7,
               ),
               delegate: SliverChildBuilderDelegate(
                 (BuildContext context, int index) {
                   return Padding(
                     padding: EdgeInsets.all(
-                        MediaQuery.of(context).size.width * 0.04),
+                        MediaQuery.of(context).size.width * 0.05),
                     child: MyListClickableView(index, lists[index]),
                   );
                 },

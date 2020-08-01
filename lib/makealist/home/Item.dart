@@ -76,7 +76,7 @@ class ItemState extends State<Item>{
 
     return Container(
         height: MediaQuery.of(context).size.height * 0.1,
-        width: MediaQuery.of(context).size.width * 0.66,
+        width: MediaQuery.of(context).size.width * 0.70,
         color: rowColor,
         child: itemRow
     );

@@ -168,6 +168,7 @@ class MyListCardViewState extends State<MyListCardView> {
             children: [
               Container(
                 color: Colors.yellow,
+                  height: MediaQuery.of(context).size.height * 0.18,
                   padding: _padding,
                   child: Row(
                       children: [
@@ -188,8 +189,8 @@ class MyListCardViewState extends State<MyListCardView> {
                                      ),
                                     ))),
                         Container(
-                                width: MediaQuery.of(context).size.width * 0.22,
-                                height: MediaQuery.of(context).size.width * 0.22,
+                                width: MediaQuery.of(context).size.width * 0.30,
+                                height: MediaQuery.of(context).size.width * 0.40,
                           child: new CircularPercentIndicator(
                             radius: MediaQuery.of(context).size.width * 0.19,
                             lineWidth: 13.0,
@@ -198,7 +199,7 @@ class MyListCardViewState extends State<MyListCardView> {
                             center: new Text(
                               makeText(efficiency),
                               style:
-                              new TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0, color: Colors.black),
+                              new TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0, color: Colors.black),
                             ),
                             circularStrokeCap: CircularStrokeCap.round,
                             progressColor: Colors.purple,
@@ -215,7 +216,7 @@ class MyListCardViewState extends State<MyListCardView> {
                   width: MediaQuery
                       .of(context)
                       .size
-                      .width * 0.75,
+                      .width * 0.80,
                   child: new ListView.builder(
                       itemCount: widget.list.listItems.length,
                       itemBuilder: (BuildContext ctxt, int index) {
