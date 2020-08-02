@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -11,6 +13,10 @@ class Item extends StatefulWidget with ChangeNotifier{
   Item.flag({this.focusFlag});
   Item.text({this.text});
   Item.textFlag({this.text, this.focusFlag});
+
+  Item.fromJson(Map<String, dynamic> json)
+  : text = json['text'], itemAction = json['itemAction'];
+
   @override
   State<StatefulWidget> createState() {
     return new ItemState();
@@ -18,6 +24,13 @@ class Item extends StatefulWidget with ChangeNotifier{
 
   void onChange(){
     notifyListeners();
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'text': text,
+      'itemAction': itemAction,
+    };
   }
 }
 

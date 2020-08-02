@@ -39,7 +39,7 @@ class FilePersistence implements Repository {
 
   @override
   Future<Map<String, dynamic>> getObject(String key) async {
-    final filename = await getFilename('objects', key);
+    final filename = await getFilename('lists', key);
     final file = await _localFile(filename);
     // 3
     if (await file.exists()) {
@@ -64,7 +64,7 @@ class FilePersistence implements Repository {
 
   @override
   void saveObject(String key, Map<String, dynamic> object) async {
-    final filename = await getFilename('objects', key);
+    final filename = await getFilename('lists', key);
     final file = await _localFile(filename);
 
     if (!await file.parent.exists()) await file.parent.create(recursive: true);

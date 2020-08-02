@@ -1,7 +1,9 @@
 import 'package:makealist/makealist/home/MyList.dart';
 import 'package:makealist/makealist/persistence/ArrayPersistence.dart';
 
-class PersistorService{
+import 'PersistenceService.dart';
+
+class ArrayPersistenceService implements PersistenceService{
   ArrayPersistence repo;
   PersistorService(){
     repo = new ArrayPersistence();

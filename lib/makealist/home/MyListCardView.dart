@@ -265,9 +265,17 @@ class MyListCardViewState extends State<MyListCardView> {
               )
             ]
         );
-    return Center(
+    return GestureDetector(
+        onTap: () {
+      FocusScopeNode currentFocus = FocusScope.of(context);
+
+      if (!currentFocus.hasPrimaryFocus) {
+        currentFocus.unfocus();
+      }
+    },
+    child:Center(
         child: listView
-    );
+    ));
   }
 
   //Utility function to disallow addition of a new item to the list in case there are already empty items

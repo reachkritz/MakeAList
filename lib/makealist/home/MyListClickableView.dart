@@ -1,12 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:makealist/makealist/service/PersistorService.dart';
+import 'package:makealist/makealist/service/ArrayPersistenceService.dart';
+import 'package:makealist/makealist/service/PersistenceService.dart';
 
 import 'MyList.dart';
 import 'MyListCardView.dart';
 
 class MyListClickableView extends StatelessWidget {
-  PersistorService service = new PersistorService();
+  PersistenceService service = new ArrayPersistenceService();
   MyList list;
   int index;
 

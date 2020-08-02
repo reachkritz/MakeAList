@@ -18,6 +18,14 @@ class MyList with ChangeNotifier{
     this.index = index;
   }
 
+  MyList.fromJson(Map<String, dynamic> json){
+    index = json['index'];
+    listHeader = json['listHeader'];
+    json['listItems'].forEach((item) {
+      listItems.add(new Item.fromJson(item));
+    });
+  }
+
   void addWithFlags(Item item) {
      item.addListener(_recomputeEfficiency);//notify listeners incase of toggle
      if(listItems.isNotEmpty){
@@ -40,4 +48,14 @@ class MyList with ChangeNotifier{
     }
     _recomputeEfficiency(); //notify listeners incase of deleting items from list
   }
+
+  // method
+  Map<String, dynamic> toJson() {
+    return {
+      'index': index,
+      'listHeader': listHeader,
+      'listItems': listItems.map((item) => item.toJson()).toList()
+    };
+  }
+
 }

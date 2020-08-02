@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:makealist/makealist/home/MyList.dart';
-import 'package:makealist/makealist/service/PersistorService.dart';
+import 'package:makealist/makealist/service/ArrayPersistenceService.dart';
+import 'package:makealist/makealist/service/PersistenceService.dart';
 
 import 'MyListClickableView.dart';
 import 'MyListCardView.dart';
@@ -25,7 +26,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  PersistorService service = new PersistorService();
+  PersistenceService service = new ArrayPersistenceService();
   List<MyList> lists = new List();
   MyList newList;
 
