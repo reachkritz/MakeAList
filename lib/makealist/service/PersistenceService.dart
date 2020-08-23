@@ -6,9 +6,9 @@ abstract class PersistenceService{
 
   void updateList(MyList list);
 
-  MyList getList(String key);
+  Future<MyList> getList(String key);
 
-  List<MyList> getAllLists();
+  Future<List<MyList>> getAllLists();
 
   List<MyList> getListsByDateRange(DateTime start, DateTime end);
 }

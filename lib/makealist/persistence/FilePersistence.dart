@@ -5,6 +5,7 @@ import 'package:makealist/makealist/persistence/Repository.dart';
 import 'package:path_provider/path_provider.dart';
 
 class FilePersistence implements Repository {
+
   Future<String> get _localPath async {
     final directory = await getApplicationDocumentsDirectory();
     return directory.path;
@@ -19,22 +20,11 @@ class FilePersistence implements Repository {
     return type + '/' + key;
   }
 
-  @override
-  Future<Uint8List> getImage(String key) async {
-    final filename = await getFilename('images', key);
+  Future<List<String>> getKeys() async {
+    final filename = "keys";
     final file = await _localFile(filename);
     // 1
-    if (await file.exists()) return await file.readAsBytes();
-    return null;
-  }
-
-  @override
-  Future<String> getString(String key) async {
-    final filename = await getFilename('strings', key);
-    final file = await _localFile(filename);
-    // 2
-    if (await file.exists()) return await file.readAsString();
-    return null;
+    if (await file.exists()) return await file.readAsLines();
   }
 
   @override
@@ -49,38 +39,33 @@ class FilePersistence implements Repository {
     return null;
   }
 
-  @override
-  Future<String> saveImage(String key, Uint8List image) async {
-    // 1
-    final filename = await getFilename('images', key);
-    // 2
-    final file = await _localFile(filename);
-    // 3
-    if (!await file.parent.exists()) await file.parent.create(recursive: true);
-    // 4
-    await file.writeAsBytes(image);
-    return filename;
+  Future<List<Map<String, dynamic>>> getAllObjects() async {
+    List<String> keys = await getKeys();
+    List<Map<String, dynamic>> listMaps = new List();
+    for (var value in keys) {
+      listMaps.add(await getObject(value));
+    }
+    return listMaps;
   }
 
   @override
   void saveObject(String key, Map<String, dynamic> object) async {
+    saveKey(key);
     final filename = await getFilename('lists', key);
     final file = await _localFile(filename);
-
     if (!await file.parent.exists()) await file.parent.create(recursive: true);
     // 5
     final jsonString = JsonEncoder().convert(object);
     await file.writeAsString(jsonString);
   }
 
-  @override
-  void saveString(String key, String value) async {
-    final filename = await getFilename('strings', key);
+  void saveKey(String key) async {
+    final filename = "keys";
     final file = await _localFile(filename);
 
     if (!await file.parent.exists()) await file.parent.create(recursive: true);
     // 6
-    await file.writeAsString(value);
+    await file.writeAsString(key, mode: FileMode.append);
   }
 
   @override
@@ -99,5 +84,28 @@ class FilePersistence implements Repository {
   Future<void> removeString(String key) {
     // TODO: implement removeString
     throw UnimplementedError();
+  }
+
+  @override
+  Future<Uint8List> getImage(String key) {
+    // TODO: implement getImage
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<String> getString(String key) {
+    // TODO: implement getString
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<String> saveImage(String key, Uint8List image) {
+    // TODO: implement saveImage
+    throw UnimplementedError();
+  }
+
+  @override
+  void saveString(String key, String value) {
+    // TODO: implement saveString
   }
 }

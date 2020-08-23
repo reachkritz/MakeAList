@@ -5,7 +5,8 @@ import 'PersistenceService.dart';
 
 class FilePersistenceService implements PersistenceService{
   FilePersistence repo;
-  PersistorService(){
+
+  FilePersistenceService(){
     repo = new FilePersistence();
   }
 
@@ -15,19 +16,28 @@ class FilePersistenceService implements PersistenceService{
   }
 
   void updateList(MyList list){
-    repo.updateList(list);
+    Map<String, dynamic> map = list.toJson();
+    repo.saveObject(list.index.toString(), map);
   }
 
-  MyList getList(String key){
-
+  Future<MyList> getList(String key) async {
+    Map<String, dynamic> map = await repo.getObject(key);
+    return MyList.fromJson(map);
   }
 
-  List<MyList> getAllLists(){
-    return repo.getAll();
+  Future<List<MyList>> getAllLists() async {
+    List<Map<String, dynamic>> rawList = await repo.getAllObjects();
+    List<MyList> list = new List();
+    for (var value in rawList) {
+      list.add(MyList.fromJson(value));
+    }
+    return list;
   }
 
-  List<MyList> getListsByDateRange(DateTime start, DateTime end){
-
+  @override
+  List<MyList> getListsByDateRange(DateTime start, DateTime end) {
+    // TODO: implement getListsByDateRange
+    throw UnimplementedError();
   }
 
 }
