@@ -7,7 +7,7 @@ import 'package:path_provider/path_provider.dart';
 class FilePersistence implements Repository {
 
   Future<String> get _localPath async {
-    final directory = await getApplicationDocumentsDirectory();
+    final directory = await getExternalStorageDirectory();
     return directory.path;
   }
 
@@ -25,6 +25,7 @@ class FilePersistence implements Repository {
     final file = await _localFile(filename);
     // 1
     if (await file.exists()) return await file.readAsLines();
+    return null;
   }
 
   @override
@@ -42,15 +43,17 @@ class FilePersistence implements Repository {
   Future<List<Map<String, dynamic>>> getAllObjects() async {
     List<String> keys = await getKeys();
     List<Map<String, dynamic>> listMaps = new List();
-    for (var value in keys) {
-      listMaps.add(await getObject(value));
+    if(keys!=null){
+      for (var value in keys) {
+        listMaps.add(await getObject(value));
+      }
     }
     return listMaps;
   }
 
   @override
   void saveObject(String key, Map<String, dynamic> object) async {
-    saveKey(key);
+    await saveKey(key);
     final filename = await getFilename('lists', key);
     final file = await _localFile(filename);
     if (!await file.parent.exists()) await file.parent.create(recursive: true);
@@ -60,7 +63,7 @@ class FilePersistence implements Repository {
   }
 
   void saveKey(String key) async {
-    final filename = "keys";
+    final filename = "keys.txt";
     final file = await _localFile(filename);
 
     if (!await file.parent.exists()) await file.parent.create(recursive: true);

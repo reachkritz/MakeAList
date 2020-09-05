@@ -83,7 +83,7 @@ class MyListCardViewState extends State<MyListCardView> {
   _calculateEfficiency(){
     int count = 0;
     widget.list.listItems.forEach((element) {
-      if(element.itemAction == Colors.lightGreen){
+      if(element.actionCode == 1){
         count++;
       }
     });
@@ -105,7 +105,7 @@ class MyListCardViewState extends State<MyListCardView> {
     setState(() {
       textStyle = TextStyle(
           color: Colors.black,
-          fontSize: fontsize,
+          fontSize: fontsize.toDouble(),
           fontFamily: 'Raleway');
     });
     //After altering the size, we will check for font size limits

@@ -8,14 +8,14 @@ final _padding = EdgeInsets.all(5.0);
 class Item extends StatefulWidget with ChangeNotifier{
   String text;
   bool focusFlag = false;
-  Color itemAction;
+  int actionCode;
   Item();
   Item.flag({this.focusFlag});
   Item.text({this.text});
   Item.textFlag({this.text, this.focusFlag});
 
   Item.fromJson(Map<String, dynamic> json)
-  : text = json['text'], itemAction = json['itemAction'];
+  : text = json['text'], actionCode = json['actionCode'];
 
   @override
   State<StatefulWidget> createState() {
@@ -29,7 +29,7 @@ class Item extends StatefulWidget with ChangeNotifier{
   Map<String, dynamic> toJson() {
     return {
       'text': text,
-      'itemAction': itemAction,
+      'actionCode': actionCode,
     };
   }
 }
@@ -50,7 +50,7 @@ class ItemState extends State<Item>{
     _controller.addListener(_setText);
     setState(() {
       _controller.text = widget.text;
-      widget.itemAction = widget.itemAction == null ? Colors.grey : widget.itemAction;
+      widget.actionCode = widget.actionCode == null ? 0 : widget.actionCode;
     });
   }
 
@@ -81,7 +81,7 @@ class ItemState extends State<Item>{
           onTap: _toggleAction,
           child: Icon(
             Icons.check_circle,
-            color: widget.itemAction,
+            color: _getActionColor(widget.actionCode),
           ),
         )
       ],
@@ -95,12 +95,17 @@ class ItemState extends State<Item>{
     );
   }
 
+  Color _getActionColor(int actionCode){
+    if(actionCode==0) return Colors.grey;
+    else return Colors.lightGreen;
+  }
+
   void _toggleAction() {
     setState(() {
-      if (widget.itemAction == Colors.grey) {
-        widget.itemAction = Colors.lightGreen;
+      if (widget.actionCode == 0) {
+        widget.actionCode = 1;
       } else {
-        widget.itemAction = Colors.grey;
+        widget.actionCode = 0;
       }
     });
     widget.onChange();
