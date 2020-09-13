@@ -30,12 +30,12 @@ class _MyHomePageState extends State<MyHomePage> {
   PersistenceService service = new FilePersistenceService();
   List<MyList> lists = new List();
   MyList newList;
+  int index;
 
   @override
   void initState() {
     super.initState();
     _fetchLists();
-    newList = new MyList(lists.length);
   }
 
   void _submitList() {
@@ -43,8 +43,8 @@ class _MyHomePageState extends State<MyHomePage> {
       if (newList.listHeader == null || newList.listHeader.isEmpty) {
         newList.listHeader = "New List - " + TimeOfDay.now().toString();
       }
-      service.saveList(newList);
-      newList = new MyList(lists.length);
+      index = service.saveList(newList);
+      newList = new MyList(index);
     });
   }
 
@@ -75,8 +75,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<void> _fetchLists() async {
     final fetchedLists = await service.getAllLists();
+    final index = await service.getNextIndex() ?? 0;
     setState(() {
       lists = fetchedLists;
+      this.index = index;
+      newList = new MyList(index);
     });
   }
 

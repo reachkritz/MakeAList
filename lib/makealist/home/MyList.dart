@@ -21,6 +21,7 @@ class MyList with ChangeNotifier{
   MyList.fromJson(Map<String, dynamic> json){
     index = json['index'];
     listHeader = json['listHeader'];
+    listItems = new List();
     json['listItems'].forEach((item) {
       listItems.add(new Item.fromJson(item));
     });

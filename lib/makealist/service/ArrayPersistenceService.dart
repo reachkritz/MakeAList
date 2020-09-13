@@ -10,8 +10,9 @@ class ArrayPersistenceService implements PersistenceService{
     repo = new ArrayPersistence();
   }
 
-  void saveList(MyList list){
+  int saveList(MyList list){
     repo.saveList(list);
+    return repo.getSize();
   }
 
   void updateList(MyList list){
@@ -28,6 +29,12 @@ class ArrayPersistenceService implements PersistenceService{
 
   List<MyList> getListsByDateRange(DateTime start, DateTime end){
 
+  }
+
+  @override
+  Future<int> getNextIndex() {
+    // TODO: implement getNextIndex
+    throw UnimplementedError();
   }
 
 }

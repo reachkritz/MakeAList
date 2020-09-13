@@ -35,4 +35,8 @@ class ArrayPersistence {
     return db;
   }
 
+  int getSize(){
+    return db.length;
+  }
+
 }

@@ -1,3 +1,4 @@
+import 'package:logger/logger.dart';
 import 'package:makealist/makealist/home/MyList.dart';
 import 'package:makealist/makealist/persistence/FilePersistence.dart';
 
@@ -5,12 +6,13 @@ import 'PersistenceService.dart';
 
 class FilePersistenceService implements PersistenceService{
   FilePersistence repo;
+  var logger = Logger();
 
   FilePersistenceService(){
     repo = new FilePersistence();
   }
 
-  void saveList(MyList list){
+  int saveList(MyList list){
     Map<String, dynamic> map = list.toJson();
     repo.saveObject(list.index.toString(), map);
   }
@@ -38,6 +40,13 @@ class FilePersistenceService implements PersistenceService{
   List<MyList> getListsByDateRange(DateTime start, DateTime end) {
     // TODO: implement getListsByDateRange
     throw UnimplementedError();
+  }
+
+  @override
+  Future<int> getNextIndex() async {
+    int index = await repo.getNextIndex();
+    logger.i('Index recieved $index latest');
+    return index;
   }
 
 }

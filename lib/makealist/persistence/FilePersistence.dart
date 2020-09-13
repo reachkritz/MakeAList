@@ -3,8 +3,11 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:makealist/makealist/persistence/Repository.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:logger/logger.dart';
 
 class FilePersistence implements Repository {
+
+  var logger = Logger();
 
   Future<String> get _localPath async {
     final directory = await getExternalStorageDirectory();
@@ -17,15 +20,30 @@ class FilePersistence implements Repository {
   }
 
   Future<String> getFilename(String type, String key) async {
-    return type + '/' + key;
+    return type + '/' + key +'.txt';
   }
 
   Future<List<String>> getKeys() async {
-    final filename = "keys";
+    final filename = "keys.txt";
     final file = await _localFile(filename);
     // 1
     if (await file.exists()) return await file.readAsLines();
     return null;
+  }
+
+  Future<int> getNextIndex() async {
+    int index;
+    List<String> keys = await getKeys();
+    index = getLastKeyFromFile(keys) ?? 0;
+    logger.i('The last key found is $index');
+    return index;
+  }
+
+  int getLastKeyFromFile(List<String> keys) {
+    if(keys!=null && keys.isNotEmpty){
+      return int.parse(keys.removeLast())+1;
+    }
+    return 0;
   }
 
   @override
@@ -35,8 +53,11 @@ class FilePersistence implements Repository {
     // 3
     if (await file.exists()) {
       final objectString = await file.readAsString();
-      return JsonDecoder().convert(objectString);
+      Map<String, dynamic> list = JsonDecoder().convert(objectString);
+      logger.i('The list fetched is '+ list.toString());
+      return list;
     }
+    logger.i('No list found with '+key+' key');
     return null;
   }
 
@@ -45,30 +66,46 @@ class FilePersistence implements Repository {
     List<Map<String, dynamic>> listMaps = new List();
     if(keys!=null){
       for (var value in keys) {
-        listMaps.add(await getObject(value));
+        Map<String, dynamic> list = await getObject(value);
+        if(list!=null) {
+          listMaps.add(list);
+        }
       }
     }
     return listMaps;
   }
 
   @override
-  void saveObject(String key, Map<String, dynamic> object) async {
-    await saveKey(key);
+  Future<int> saveObject(String key, Map<String, dynamic> object) async {
     final filename = await getFilename('lists', key);
     final file = await _localFile(filename);
-    if (!await file.parent.exists()) await file.parent.create(recursive: true);
-    // 5
-    final jsonString = JsonEncoder().convert(object);
-    await file.writeAsString(jsonString);
+    try {
+      if (!await file.parent.exists()) await file.parent.create(
+          recursive: true);
+      final jsonString = JsonEncoder().convert(object);
+      logger.i('The list being written to memory ',jsonString);
+      await file.writeAsString(jsonString);
+    } catch (on, StackTrace) {
+        logger.e('Failure while saving the file ', StackTrace);
+    }
+    int nextIndex = await saveKey(key);
+    return nextIndex;
   }
 
-  void saveKey(String key) async {
+  Future<int> saveKey(String key) async {
     final filename = "keys.txt";
     final file = await _localFile(filename);
-
-    if (!await file.parent.exists()) await file.parent.create(recursive: true);
-    // 6
-    await file.writeAsString(key, mode: FileMode.append);
+    try {
+      if (!await file.parent.exists()) await file.parent.create(
+          recursive: true);
+      logger.i('The key being written to memory ',key);
+      await file.writeAsString(key+'\n', mode: FileMode.append);
+    } catch (on, Stacktrace){
+      logger.e('Failure while saving index ',Stacktrace);
+      return int.parse(key);
+    }
+    List<String> keys = await file.readAsLines();
+    return getLastKeyFromFile(keys);
   }
 
   @override
