@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:auto_size_text_field/auto_size_text_field.dart';
 
 final _padding = EdgeInsets.all(5.0);
 
@@ -68,7 +69,8 @@ class ItemState extends State<Item>{
       children: [
         Container(
           width: MediaQuery.of(context).size.width * 0.60,
-          child: TextField(
+          child: AutoSizeTextField(
+            cursorColor: Colors.lightBlueAccent,
             controller: _controller,
             autofocus: widget.focusFlag,
             style: TextStyle(

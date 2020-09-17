@@ -6,7 +6,7 @@ import 'PersistenceService.dart';
 
 class ArrayPersistenceService implements PersistenceService{
   ArrayPersistence repo;
-  PersistorService(){
+  ArrayPersistenceService(){
     repo = new ArrayPersistence();
   }
 
@@ -33,8 +33,7 @@ class ArrayPersistenceService implements PersistenceService{
 
   @override
   Future<int> getNextIndex() {
-    // TODO: implement getNextIndex
-    throw UnimplementedError();
+    return Future.delayed(Duration(seconds: 1), () => 0);
   }
 
 }

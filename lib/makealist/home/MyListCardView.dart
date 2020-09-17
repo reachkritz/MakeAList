@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'package:auto_size_text_field/auto_size_text_field.dart';
 
 import 'Item.dart';
 import 'MyList.dart';
@@ -36,7 +37,11 @@ class MyListCardViewState extends State<MyListCardView> {
   bool underflowFlag = false;
 
   void _setHeader() {
-    widget.list.listHeader = _controller.text;
+    if(widget.list.listHeader != _controller.text) {
+      setState(() {
+        widget.list.listHeader = _controller.text;
+      });
+    }
   }
 
   double _getIconSize() {
@@ -75,7 +80,6 @@ class MyListCardViewState extends State<MyListCardView> {
     Timer.run(() {
       _initializeTextStyle();
     });
-    _controller.addListener(_changeTextSize);
     _calculateEfficiency();
   }
 
@@ -126,44 +130,6 @@ class MyListCardViewState extends State<MyListCardView> {
     return textWidth;
   }
 
-  TextStyle _changeTextSize() {
-    var fieldWidth = MediaQuery
-        .of(context)
-        .size
-        .width * 0.80 - 12.0;
-    double textWidth = _findTextWidth();
-    var size;
-    if (!overflowFlag && (textWidth - fieldWidth) > 5) {
-      size = max(textStyle.fontSize - 1, 25);
-      setState(() {
-        textStyle = TextStyle(
-            color: Colors.black,
-            fontSize: size,
-            fontFamily: 'Raleway');
-      });
-      if(size == 25){
-         overflowFlag = true;
-      }
-      if(size < 50){
-        underflowFlag = false;
-      }
-    } else if (!underflowFlag && (textWidth - fieldWidth) < -5) {
-      size = min(textStyle.fontSize + 1, 50);
-      setState(() {
-        textStyle = TextStyle(
-            color: Colors.black,
-            fontSize: size,
-            fontFamily: 'Raleway');
-      });
-      if(size == 50){
-        underflowFlag = true;
-      }
-      if(size > 25){
-        overflowFlag = false;
-      }
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final listView = Column(
@@ -176,8 +142,7 @@ class MyListCardViewState extends State<MyListCardView> {
                       children: [
                         Container(
                             width: MediaQuery.of(context).size.width * 0.50,
-                            child : TextField(
-                                keyboardType: TextInputType.text,
+                            child : AutoSizeTextField(
                                 cursorColor: Colors.black,
                                 maxLength: 50,
                                 maxLengthEnforced: true,
@@ -187,15 +152,15 @@ class MyListCardViewState extends State<MyListCardView> {
                                      hintText: "Title...",
                                      hintStyle: TextStyle(
                                          fontSize: 20,
-                                         color: Colors.black,
+                                         color: Colors.grey,
                                      ),
-                                    ))),
+                                    ),),),
                         Container(
                                 width: MediaQuery.of(context).size.width * 0.30,
                                 height: MediaQuery.of(context).size.width * 0.40,
                           child: new CircularPercentIndicator(
                             radius: MediaQuery.of(context).size.width * 0.19,
-                            lineWidth: 13.0,
+                            lineWidth: 9.0,
                             animation: true,
                             percent: efficiency,
                             center: new Text(

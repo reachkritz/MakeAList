@@ -27,7 +27,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  PersistenceService service = new FilePersistenceService();
+  PersistenceService service = new ArrayPersistenceService();
   List<MyList> lists = new List();
   MyList newList;
   int index;
