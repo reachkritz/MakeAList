@@ -23,34 +23,29 @@ class FilePersistence implements Repository {
     return type + '/' + key +'.txt';
   }
 
-  Future<List<String>> getKeys() async {
+  Future<int> getKeyFromFile() async {
     final filename = "keys.txt";
     final file = await _localFile(filename);
     // 1
-    if (await file.exists()) return await file.readAsLines();
-    return null;
+    if (await file.exists()) {
+      String index = await file.readAsString();
+      return int.parse(index.trim());
+    }
+      return null;
   }
 
   Future<int> getNextIndex() async {
     int index;
-    List<String> keys = await getKeys();
-    index = getLastKeyFromFile(keys) ?? 0;
+    index = getKeyFromFile() ?? 0;
     logger.i('The last key found is $index');
     return index;
   }
 
-  int getLastKeyFromFile(List<String> keys) {
-    if(keys!=null && keys.isNotEmpty){
-      return int.parse(keys.removeLast())+1;
-    }
-    return 0;
-  }
 
   @override
   Future<Map<String, dynamic>> getObject(String key) async {
     final filename = await getFilename('lists', key);
     final file = await _localFile(filename);
-    // 3
     if (await file.exists()) {
       final objectString = await file.readAsString();
       Map<String, dynamic> list = JsonDecoder().convert(objectString);
@@ -62,16 +57,25 @@ class FilePersistence implements Repository {
   }
 
   Future<List<Map<String, dynamic>>> getAllObjects() async {
-    List<String> keys = await getKeys();
+    final listDir = new Directory(await _localPath);
+    List<Map<String, dynamic>> listMaps;
+    listDir.exists().then((isThere) {
+      listMaps = isThere ? listAllFiles(listDir) : new List();
+    });
+
+    return listMaps;
+  }
+
+  List<Map<String, dynamic>> listAllFiles(Directory listDir) {
     List<Map<String, dynamic>> listMaps = new List();
-    if(keys!=null){
-      for (var value in keys) {
-        Map<String, dynamic> list = await getObject(value);
-        if(list!=null) {
-          listMaps.add(list);
-        }
+    Stream<FileSystemEntity> list = listDir.list(recursive: false);
+    list.forEach((element) async {
+      if(element is File){
+        final objectString = await element.readAsString();
+        Map<String, dynamic> list = JsonDecoder().convert(objectString);
+        listMaps.add(list);
       }
-    }
+    });
     return listMaps;
   }
 
@@ -99,46 +103,34 @@ class FilePersistence implements Repository {
       if (!await file.parent.exists()) await file.parent.create(
           recursive: true);
       logger.i('The key being written to memory ',key);
-      await file.writeAsString(key+'\n', mode: FileMode.append);
+      await file.writeAsString(key+'\n', mode: FileMode.write);
     } catch (on, Stacktrace){
       logger.e('Failure while saving index ',Stacktrace);
       return int.parse(key);
     }
-    List<String> keys = await file.readAsLines();
-    return getLastKeyFromFile(keys);
+    return int.parse(key)+1;
   }
 
   @override
   Future<bool> updateObject(String key, Map<String, dynamic> object) async {
     final filename = await getFilename('lists', key);
     final file = await _localFile(filename);
-    bool result = await isKeyPresent(key);
-    if(result){
+    bool result = false;
       try {
-        if (!await file.parent.exists()) await file.parent.create(
-            recursive: true);
-        final jsonString = JsonEncoder().convert(object);
-        logger.i('The list being written to memory ',jsonString);
-        await file.writeAsString(jsonString,mode: FileMode.write);
+        if (await file.parent.exists()) {
+          final jsonString = JsonEncoder().convert(object);
+          logger.i('The list being written to memory ',jsonString);
+          await file.writeAsString(jsonString,mode: FileMode.write);
+          result = true;
+        } else {
+          logger.i('File not found!');
+          result = false;
+        }
       } catch (on, StackTrace) {
         logger.e('Failure while saving the file ', StackTrace);
         result = false;
       }
-    }
     return result;
-  }
-
-  Future<bool> isKeyPresent(String key) async {
-    List<String> keys = await getKeys();
-    logger.i('The key being searched is '+key);
-    keys.forEach((element) {
-      if(element.trim().compareTo(key) == 0){
-        logger.i('The key exists');
-        return true;
-      }
-    });
-    logger.i('The key was not found');
-    return false;
   }
 
   @override
@@ -153,9 +145,11 @@ class FilePersistence implements Repository {
     final file = await _localFile(filename);
     bool result = false;
     try {
-      if (!await file.parent.exists()){
+      if (await file.parent.exists()){
         await file.delete();
         result = true;
+      } else {
+        result = false;
       }
     } catch(on, StackTrace) {
        logger.e('Failure while saving the file ', StackTrace);
@@ -192,4 +186,5 @@ class FilePersistence implements Repository {
   void saveString(String key, String value) {
     // TODO: implement saveString
   }
+
 }
