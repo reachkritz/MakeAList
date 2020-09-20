@@ -17,5 +17,5 @@ abstract class Repository {
 
   Future<void> removeImage(String key);
 
-  Future<void> removeObject(String key);
+  Future<bool> removeObject(String key);
 }

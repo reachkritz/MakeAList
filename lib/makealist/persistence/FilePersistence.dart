@@ -84,7 +84,7 @@ class FilePersistence implements Repository {
           recursive: true);
       final jsonString = JsonEncoder().convert(object);
       logger.i('The list being written to memory ',jsonString);
-      await file.writeAsString(jsonString);
+      await file.writeAsString(jsonString,mode: FileMode.write);
     } catch (on, StackTrace) {
         logger.e('Failure while saving the file ', StackTrace);
     }
@@ -109,15 +109,59 @@ class FilePersistence implements Repository {
   }
 
   @override
+  Future<bool> updateObject(String key, Map<String, dynamic> object) async {
+    final filename = await getFilename('lists', key);
+    final file = await _localFile(filename);
+    bool result = await isKeyPresent(key);
+    if(result){
+      try {
+        if (!await file.parent.exists()) await file.parent.create(
+            recursive: true);
+        final jsonString = JsonEncoder().convert(object);
+        logger.i('The list being written to memory ',jsonString);
+        await file.writeAsString(jsonString,mode: FileMode.write);
+      } catch (on, StackTrace) {
+        logger.e('Failure while saving the file ', StackTrace);
+        result = false;
+      }
+    }
+    return result;
+  }
+
+  Future<bool> isKeyPresent(String key) async {
+    List<String> keys = await getKeys();
+    logger.i('The key being searched is '+key);
+    keys.forEach((element) {
+      if(element.trim().compareTo(key) == 0){
+        logger.i('The key exists');
+        return true;
+      }
+    });
+    logger.i('The key was not found');
+    return false;
+  }
+
+  @override
   Future<void> removeImage(String key) {
     // TODO: implement removeImage
     throw UnimplementedError();
   }
 
   @override
-  Future<void> removeObject(String key) {
-    // TODO: implement removeObject
-    throw UnimplementedError();
+  Future<bool> removeObject(String key) async{
+    final filename = await getFilename('lists', key);
+    final file = await _localFile(filename);
+    bool result = false;
+    try {
+      if (!await file.parent.exists()){
+        await file.delete();
+        result = true;
+      }
+    } catch(on, StackTrace) {
+       logger.e('Failure while saving the file ', StackTrace);
+       result = false;
+    }
+    return result;
   }
 
   @override

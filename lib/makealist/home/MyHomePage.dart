@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:makealist/makealist/home/MyList.dart';
-import 'package:makealist/makealist/service/ArrayPersistenceService.dart';
+import 'package:makealist/makealist/service/MapPersistenceService.dart';
 import 'package:makealist/makealist/service/FilePersistenceService.dart';
 import 'package:makealist/makealist/service/PersistenceService.dart';
 
@@ -27,10 +27,16 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  PersistenceService service = new ArrayPersistenceService();
+  PersistenceService service = new MapPersistenceService();
   List<MyList> lists = new List();
   MyList newList;
   int index;
+  TextStyle style = TextStyle(
+      fontSize: 20,
+      color: Colors.white,
+      fontFamily: 'Raleway'
+  );
+  final _padding = EdgeInsets.only( left: 35.0, right: 35.0);
 
   @override
   void initState() {
@@ -46,6 +52,14 @@ class _MyHomePageState extends State<MyHomePage> {
       index = service.saveList(newList);
       newList = new MyList(index);
     });
+    Navigator.of(context).pop();
+  }
+
+  void _closeDialog() {
+    setState(() {
+      newList = new MyList(index);
+    });
+    Navigator.of(context).pop();
   }
 
   Widget _showNewList() {
@@ -61,14 +75,31 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: Column(
                   children: [
                     new MyListCardView(newList),
-                    IconButton(
-                        iconSize: MediaQuery.of(context).size.height * 0.05,
-                        icon: Icon(
-                          Icons.check,
-                          color: Colors.lightBlue,
-                          size: MediaQuery.of(context).size.height * 0.05,
-                        ),
-                        onPressed: _submitList)
+                    new ButtonBar(
+                        alignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          FlatButton(
+                            color: Colors.blue,
+                            child: Text('Delete', style: style),
+                            shape: new RoundedRectangleBorder(
+                                borderRadius: new BorderRadius.circular(5.0)),
+                            textColor: Colors.white,
+                            hoverColor: Colors.cyan,
+                            padding: _padding,
+                            onPressed: _closeDialog,
+                          ),
+                          FlatButton(
+                            color: Colors.blue,
+                            child: Text('Save', style: style),
+                            shape: new RoundedRectangleBorder(
+                                borderRadius: new BorderRadius.circular(5.0)),
+                            textColor: Colors.white,
+                            hoverColor: Colors.cyan,
+                            padding: _padding,
+                            onPressed: _submitList,
+                          ),
+                        ]
+                    )
                   ],
                 ))));
   }

@@ -1,13 +1,13 @@
 import 'package:flutter/widgets.dart';
 import 'package:makealist/makealist/home/MyList.dart';
-import 'package:makealist/makealist/persistence/ArrayPersistence.dart';
+import 'package:makealist/makealist/persistence/MapPersistence.dart';
 
 import 'PersistenceService.dart';
 
-class ArrayPersistenceService implements PersistenceService{
-  ArrayPersistence repo;
-  ArrayPersistenceService(){
-    repo = new ArrayPersistence();
+class MapPersistenceService implements PersistenceService{
+  MapPersistence repo;
+  MapPersistenceService(){
+    repo = new MapPersistence();
   }
 
   int saveList(MyList list){
@@ -34,6 +34,11 @@ class ArrayPersistenceService implements PersistenceService{
   @override
   Future<int> getNextIndex() {
     return Future.delayed(Duration(seconds: 1), () => 0);
+  }
+
+  @override
+  Future<bool> deleteList(MyList list) {
+    return  Future.delayed(Duration(seconds: 1), () => repo.deleteList(list.index));
   }
 
 }

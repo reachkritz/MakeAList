@@ -1,15 +1,22 @@
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:makealist/makealist/service/ArrayPersistenceService.dart';
+import 'package:makealist/makealist/service/MapPersistenceService.dart';
 import 'package:makealist/makealist/service/PersistenceService.dart';
 
 import 'MyList.dart';
 import 'MyListCardView.dart';
 
 class MyListClickableView extends StatelessWidget {
-  PersistenceService service = new ArrayPersistenceService();
+  PersistenceService service = new MapPersistenceService();
   MyList list;
   int index;
+  TextStyle style = TextStyle(
+      fontSize: 20,
+      color: Colors.white,
+      fontFamily: 'Raleway'
+  );
+  final _padding = EdgeInsets.only( left: 35.0, right: 35.0);
 
   MyListClickableView(int index, MyList underlyingList) {
     list = underlyingList;
@@ -21,16 +28,67 @@ class MyListClickableView extends StatelessWidget {
         child: Container(
             height: MediaQuery.of(context).size.height*0.80,
             width: MediaQuery.of(context).size.width*0.85,
-            child: new Card(
+            child: Column(
+               children: [
+                new Card(
                 elevation: 5.0,
                 borderOnForeground: true,
                 shadowColor: Colors.black12,
                 color: Colors.white,
-                child: new MyListCardView(list))));
+                child: new MyListCardView(list)),
+                 new ButtonBar(
+                     alignment: MainAxisAlignment.center,
+                     children: <Widget>[
+                       FlatButton(
+                         color: Colors.blue,
+                         child: Text('Delete', style: style),
+                         shape: new RoundedRectangleBorder(
+                             borderRadius: new BorderRadius.circular(5.0)),
+                         textColor: Colors.white,
+                         hoverColor: Colors.cyan,
+                         padding: _padding,
+                         onPressed: () => _deleteList(context),
+                       ),
+                       FlatButton(
+                         color: Colors.blue,
+                         child: Text('Update', style: style),
+                         shape: new RoundedRectangleBorder(
+                             borderRadius: new BorderRadius.circular(5.0)),
+                         textColor: Colors.white,
+                         hoverColor: Colors.cyan,
+                         padding: _padding,
+                         onPressed: () => _updateList(context),
+                       ),
+                       FlatButton(
+                         color: Colors.blue,
+                         child: Text('Close', style: style),
+                         shape: new RoundedRectangleBorder(
+                             borderRadius: new BorderRadius.circular(5.0)),
+                         textColor: Colors.white,
+                         hoverColor: Colors.cyan,
+                         padding: _padding,
+                         onPressed: () => _closeDialog(context),
+                       ),
+                     ]
+                 )
+             ]
+            )
+        )
+    );
   }
 
-  void _updateList(){
+  void _updateList(BuildContext context){
     service.updateList(list);
+    Navigator.of(context);
+  }
+
+  void _closeDialog(BuildContext context){
+    Navigator.of(context).pop();
+  }
+
+  void _deleteList(BuildContext context){
+    service.deleteList(list);
+    Navigator.of(context).pop();
   }
 
   @override
@@ -61,7 +119,7 @@ class MyListClickableView extends StatelessWidget {
             builder: (context) {
               return _showCard(context);
             },
-          ).whenComplete(() => _updateList);
+          );
         });
   }
 }

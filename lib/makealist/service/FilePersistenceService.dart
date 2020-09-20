@@ -49,4 +49,10 @@ class FilePersistenceService implements PersistenceService{
     return index;
   }
 
+  @override
+  Future<bool> deleteList(MyList list) async{
+    logger.i('Deleting list at '+list.index.toString()+' index');
+    return await repo.removeObject(list.index.toString());
+  }
+
 }

@@ -13,4 +13,6 @@ abstract class PersistenceService{
   List<MyList> getListsByDateRange(DateTime start, DateTime end);
 
   Future<int> getNextIndex();
+
+  Future<bool> deleteList(MyList list);
 }

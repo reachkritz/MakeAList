@@ -217,8 +217,10 @@ class MyListCardViewState extends State<MyListCardView> {
                         );
                       })
               ),
-              IconButton(
-                icon: Icon(
+              FloatingActionButton(
+                elevation: 2.0,
+                hoverColor: Colors.cyan,
+                child: Icon(
                   Icons.add,
                   size: _getIconSize(),
                 ),
