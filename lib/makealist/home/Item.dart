@@ -16,7 +16,7 @@ class Item extends StatefulWidget with ChangeNotifier{
   Item.textFlag({this.text, this.focusFlag});
 
   Item.fromJson(Map<String, dynamic> json)
-  : text = json['text'], actionCode = json['actionCode'];
+  : text = json['text'], actionCode = json['actionCode'], focusFlag = true;
 
   @override
   State<StatefulWidget> createState() {
