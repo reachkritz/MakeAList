@@ -23,7 +23,7 @@ class MyList with ChangeNotifier{
     listHeader = json['listHeader'];
     listItems = new List();
     json['listItems'].forEach((item) {
-      listItems.add(new Item.fromJson(item));
+      addWithFlags(new Item.fromJson(item));
     });
   }
 

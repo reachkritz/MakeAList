@@ -38,7 +38,7 @@ class FilePersistenceService with ChangeNotifier implements PersistenceService{
     for (var value in rawList) {
       MyList fetchedList = MyList.fromJson(value);
       logger.i('MyList fetched is $fetchedList');
-      list.add(MyList.fromJson(value));
+      list.add(fetchedList);
     }
     return list;
   }

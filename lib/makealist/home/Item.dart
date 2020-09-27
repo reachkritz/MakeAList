@@ -40,9 +40,11 @@ class ItemState extends State<Item>{
   TextEditingController _controller = new TextEditingController();
 
   void _setText() {
-    setState(() {
-      widget.text = _controller.text;
-    });
+    if(widget.text != _controller.text){
+      setState(() {
+        widget.text = _controller.text;
+      });
+    }
   }
 
   @override
@@ -69,7 +71,7 @@ class ItemState extends State<Item>{
       children: [
         Container(
           width: MediaQuery.of(context).size.width * 0.60,
-          child: TextField(
+          child: AutoSizeTextField(
             cursorColor: Colors.lightBlueAccent,
             controller: _controller,
             autofocus: widget.focusFlag,
