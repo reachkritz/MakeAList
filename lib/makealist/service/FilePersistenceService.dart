@@ -1,10 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:logger/logger.dart';
 import 'package:makealist/makealist/home/MyList.dart';
 import 'package:makealist/makealist/persistence/FilePersistence.dart';
 
 import 'PersistenceService.dart';
 
-class FilePersistenceService implements PersistenceService{
+class FilePersistenceService with ChangeNotifier implements PersistenceService{
   FilePersistence repo;
   var logger = Logger();
 
@@ -12,14 +13,17 @@ class FilePersistenceService implements PersistenceService{
     repo = new FilePersistence();
   }
 
-  int saveList(MyList list){
+  Future<int> saveList(MyList list) async {
     Map<String, dynamic> map = list.toJson();
-    repo.saveObject(list.index.toString(), map);
+    var index = await repo.saveObject(list.index.toString(), map);
+    notifyListeners();
+    return index;
   }
 
-  void updateList(MyList list){
+  Future<void> updateList(MyList list) async {
     Map<String, dynamic> map = list.toJson();
-    repo.saveObject(list.index.toString(), map);
+    await repo.saveObject(list.index.toString(), map);
+    notifyListeners();
   }
 
   Future<MyList> getList(String key) async {
@@ -30,7 +34,10 @@ class FilePersistenceService implements PersistenceService{
   Future<List<MyList>> getAllLists() async {
     List<Map<String, dynamic>> rawList = await repo.getAllObjects();
     List<MyList> list = new List();
+    if(rawList!=null)
     for (var value in rawList) {
+      MyList fetchedList = MyList.fromJson(value);
+      logger.i('MyList fetched is $fetchedList');
       list.add(MyList.fromJson(value));
     }
     return list;
@@ -52,7 +59,12 @@ class FilePersistenceService implements PersistenceService{
   @override
   Future<bool> deleteList(MyList list) async{
     logger.i('Deleting list at '+list.index.toString()+' index');
-    return await repo.removeObject(list.index.toString());
-  }
+    var result = await repo.removeObject(list.index.toString());
+    if(result) {
+      logger.i('hasListeners() = '+ hasListeners.toString());
+      notifyListeners();
+    }
+    return result;
+    }
 
 }

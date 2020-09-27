@@ -27,7 +27,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  PersistenceService service = new MapPersistenceService();
+  PersistenceService service = new FilePersistenceService();
   List<MyList> lists = new List();
   MyList newList;
   int index;
@@ -41,15 +41,23 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
+    service.addListener(_refreshList);
     _fetchLists();
   }
 
-  void _submitList() {
+  void _refreshList() async{
+    List<MyList> fetchLists = await service.getAllLists();
     setState(() {
-      if (newList.listHeader == null || newList.listHeader.isEmpty) {
-        newList.listHeader = "New List - " + TimeOfDay.now().toString();
-      }
-      index = service.saveList(newList);
+      lists = fetchLists;
+    });
+  }
+
+  void _submitList() async{
+    if (newList.listHeader == null || newList.listHeader.isEmpty) {
+      newList.listHeader = "New List - " + DateTime.now().toString();
+    }
+    index = await service.saveList(newList);
+    setState(() {
       newList = new MyList(index);
     });
     Navigator.of(context).pop();
@@ -140,7 +148,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   return Padding(
                     padding: EdgeInsets.all(
                         MediaQuery.of(context).size.width * 0.05),
-                    child: MyListClickableView(index, lists[index]),
+                    child: MyListClickableView(index, lists[index], service),
                   );
                 },
                 childCount: lists.length,

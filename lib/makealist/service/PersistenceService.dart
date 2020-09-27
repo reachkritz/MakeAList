@@ -1,8 +1,9 @@
 
+import 'package:flutter/cupertino.dart';
 import 'package:makealist/makealist/home/MyList.dart';
 
-abstract class PersistenceService{
-  int saveList(MyList list);
+abstract class PersistenceService with ChangeNotifier{
+  Future<int> saveList(MyList list);
 
   void updateList(MyList list);
 

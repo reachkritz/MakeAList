@@ -4,19 +4,21 @@ import 'package:makealist/makealist/persistence/MapPersistence.dart';
 
 import 'PersistenceService.dart';
 
-class MapPersistenceService implements PersistenceService{
+class MapPersistenceService with ChangeNotifier implements PersistenceService{
   MapPersistence repo;
   MapPersistenceService(){
     repo = new MapPersistence();
   }
 
-  int saveList(MyList list){
+  Future<int> saveList(MyList list){
     repo.saveList(list);
-    return repo.getSize();
+    repo.getSize();
+    notifyListeners();
   }
 
   void updateList(MyList list){
     repo.updateList(list);
+    notifyListeners();
   }
 
   Future<MyList> getList(String key){
@@ -38,7 +40,10 @@ class MapPersistenceService implements PersistenceService{
 
   @override
   Future<bool> deleteList(MyList list) {
-    return  Future.delayed(Duration(seconds: 1), () => repo.deleteList(list.index));
+    Future.delayed(Duration(seconds: 1), () => {
+      repo.deleteList(list.index),
+      notifyListeners(),
+    });
   }
 
 }

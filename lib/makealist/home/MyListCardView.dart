@@ -187,7 +187,6 @@ class MyListCardViewState extends State<MyListCardView> {
                   child: new ListView.builder(
                       itemCount: widget.list.listItems.length,
                       itemBuilder: (BuildContext ctxt, int index) {
-                        final item = widget.list.listItems[index];
                         return Dismissible(
                           key: UniqueKey(),
                           direction: DismissDirection.startToEnd,

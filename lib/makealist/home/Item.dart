@@ -69,7 +69,7 @@ class ItemState extends State<Item>{
       children: [
         Container(
           width: MediaQuery.of(context).size.width * 0.60,
-          child: AutoSizeTextField(
+          child: TextField(
             cursorColor: Colors.lightBlueAccent,
             controller: _controller,
             autofocus: widget.focusFlag,

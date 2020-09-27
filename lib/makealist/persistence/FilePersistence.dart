@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
@@ -29,15 +30,16 @@ class FilePersistence implements Repository {
     // 1
     if (await file.exists()) {
       String index = await file.readAsString();
-      return int.parse(index.trim());
+      logger.i('Index read from file $index\n');
+      return int.parse(index.trim()) + 1;
     }
       return null;
   }
 
   Future<int> getNextIndex() async {
     int index;
-    index = getKeyFromFile() ?? 0;
-    logger.i('The last key found is $index');
+    index = await getKeyFromFile() ?? 0;
+    logger.i('The last key found is $index\n');
     return index;
   }
 
@@ -57,25 +59,26 @@ class FilePersistence implements Repository {
   }
 
   Future<List<Map<String, dynamic>>> getAllObjects() async {
-    final listDir = new Directory(await _localPath);
+    final listDir = new Directory(await _localPath + '/lists');
     List<Map<String, dynamic>> listMaps;
-    listDir.exists().then((isThere) {
-      listMaps = isThere ? listAllFiles(listDir) : new List();
-    });
-
+    if(await listDir.exists()){
+      listMaps = await listAllFiles(listDir);
+    }
     return listMaps;
   }
 
-  List<Map<String, dynamic>> listAllFiles(Directory listDir) {
+  Future<List<Map<String, dynamic>>> listAllFiles(Directory listDir) async {
     List<Map<String, dynamic>> listMaps = new List();
-    Stream<FileSystemEntity> list = listDir.list(recursive: false);
-    list.forEach((element) async {
+    List<FileSystemEntity> list = listDir.listSync()
+        .toList(growable: false);
+    for(FileSystemEntity element in list){
       if(element is File){
+        logger.i("File found");
         final objectString = await element.readAsString();
         Map<String, dynamic> list = JsonDecoder().convert(objectString);
         listMaps.add(list);
       }
-    });
+    }
     return listMaps;
   }
 
@@ -146,6 +149,7 @@ class FilePersistence implements Repository {
     bool result = false;
     try {
       if (await file.parent.exists()){
+        logger.i('Deleting the list $key');
         await file.delete();
         result = true;
       } else {
