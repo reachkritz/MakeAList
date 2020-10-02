@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'Item.dart';
 
 class MyList with ChangeNotifier{
+  static List<GlobalKey<FormState>> _formKey = new List();
   int index;
   String listHeader;
   List<Item> listItems;
@@ -23,15 +24,17 @@ class MyList with ChangeNotifier{
     listHeader = json['listHeader'];
     listItems = new List();
     json['listItems'].forEach((item) {
-      addWithFlags(new Item.fromJson(item));
+      addWithRecomputation(new Item.fromJson(item));
     });
   }
 
-  void addWithFlags(Item item) {
+  void addWithRecomputation(Item item) {
+    _formKey.add(new GlobalKey<FormState>());
+    item.formKey = _formKey.last;
+    if(listItems.isNotEmpty){
+      listItems.last.focusFlag = false;
+    }
      item.addListener(_recomputeEfficiency);//notify listeners incase of toggle
-     if(listItems.isNotEmpty){
-       listItems.last.focusFlag = false;
-     }
      listItems.add(item);
      _recomputeEfficiency(); //notify listeners incase of adding new items to list
   }
@@ -40,8 +43,9 @@ class MyList with ChangeNotifier{
     notifyListeners();
   }
 
-  void removeWithFlags(int index) {
+  void removeWithRecomputation(int index) {
     listItems.removeAt(index);
+    _formKey.removeAt(index);
     if(listItems.isNotEmpty && index == listItems.length){
       listItems.last.focusFlag = true;
     } else {
@@ -49,6 +53,7 @@ class MyList with ChangeNotifier{
     }
     _recomputeEfficiency(); //notify listeners incase of deleting items from list
   }
+
 
   // method
   Map<String, dynamic> toJson() {

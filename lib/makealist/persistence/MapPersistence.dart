@@ -13,8 +13,8 @@ class MapPersistence {
     MyList l4 = new MyList.header("Meeting Mintues - 16/6/2020",3);
     MyList l5 = new MyList.header("Schedule for week",4);
     
-    l1.addWithFlags(new Item.textFlag(text: 'Sapna Jahan', focusFlag: true));
-    l1.addWithFlags(new Item.textFlag(text: 'Emptiness', focusFlag: true));
+    l1.addWithRecomputation(new Item.text(text: 'Sapna Jahan'));
+    l1.addWithRecomputation(new Item.text(text: 'Emptiness'));
 
     db.putIfAbsent(l1.index, () => l1);
     db.putIfAbsent(l2.index, () => l2);

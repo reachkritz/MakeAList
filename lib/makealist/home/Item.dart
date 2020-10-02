@@ -7,6 +7,7 @@ import 'package:auto_size_text_field/auto_size_text_field.dart';
 final _padding = EdgeInsets.all(5.0);
 
 class Item extends StatefulWidget with ChangeNotifier{
+  GlobalKey<FormState> formKey;
   String text;
   bool focusFlag = false;
   int actionCode;
@@ -20,7 +21,7 @@ class Item extends StatefulWidget with ChangeNotifier{
 
   @override
   State<StatefulWidget> createState() {
-    return new ItemState();
+    return ItemState();
   }
 
   void onChange(){
@@ -92,6 +93,7 @@ class ItemState extends State<Item>{
     );
 
     return Container(
+        key: widget.formKey,
         height: MediaQuery.of(context).size.height * 0.1,
         width: MediaQuery.of(context).size.width * 0.70,
         color: rowColor,

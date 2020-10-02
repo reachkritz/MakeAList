@@ -35,6 +35,7 @@ class MyListCardViewState extends State<MyListCardView> {
 
   bool overflowFlag = false;
   bool underflowFlag = false;
+  FocusNode myFocusNode;
 
   void _setHeader() {
     if(widget.list.listHeader != _controller.text) {
@@ -66,6 +67,7 @@ class MyListCardViewState extends State<MyListCardView> {
   @override
   void dispose() {
     _controller.dispose();
+    myFocusNode.dispose();
     super.dispose();
   }
 
@@ -81,6 +83,7 @@ class MyListCardViewState extends State<MyListCardView> {
       _initializeTextStyle();
     });
     _calculateEfficiency();
+    myFocusNode = FocusNode();
   }
 
   //Callback function to compute efficiency upon updates from the underlying list object
@@ -148,6 +151,7 @@ class MyListCardViewState extends State<MyListCardView> {
                                 maxLengthEnforced: true,
                                 controller: _controller,
                                 style: textStyle,
+                                autofocus: true,
                                 decoration: InputDecoration.collapsed(
                                      hintText: "Title...",
                                      hintStyle: TextStyle(
@@ -198,19 +202,20 @@ class MyListCardViewState extends State<MyListCardView> {
                               child: Row(
                                 children: [
                                   widget.list.listItems[index],
-                                  GestureDetector( onTap: () {
+                                  GestureDetector(
+                                    onTap: () {
                                     setState(() {
-                                      widget.list.removeWithFlags(index);
+                                      widget.list.removeWithRecomputation(index);
                                     });
                                   },
-                                      child: Icon(Icons.delete_forever),
+                                    child: Icon(Icons.delete_forever),
                                   )
                                 ],
                               )
                           ),
                           onDismissed: (direction) {
                             setState(() {
-                              widget.list.removeWithFlags(index);
+                              widget.list.removeWithRecomputation(index);
                             });
                           },
                         );
@@ -226,21 +231,23 @@ class MyListCardViewState extends State<MyListCardView> {
                 onPressed: () {
                   if(_noEmptyItemAlready()){
                     setState(() {
-                      widget.list.addWithFlags(new Item.flag(focusFlag: true));
+                      widget.list.addWithRecomputation(new Item.flag(focusFlag: true));
                     });
                   }
                 },
               )
             ]
         );
-    return GestureDetector(
-        onTap: () {
+    final unfocus = () {
       FocusScopeNode currentFocus = FocusScope.of(context);
-
-      if (!currentFocus.hasPrimaryFocus) {
-        currentFocus.unfocus();
-      }
-    },
+      setState(() {
+        if (!currentFocus.hasPrimaryFocus) {
+          currentFocus.unfocus();
+        }
+      });
+    };
+    return GestureDetector(
+        onTap: unfocus,
     child:Center(
         child: listView
     ));
