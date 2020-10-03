@@ -151,7 +151,6 @@ class MyListCardViewState extends State<MyListCardView> {
                                 maxLengthEnforced: true,
                                 controller: _controller,
                                 style: textStyle,
-                                autofocus: true,
                                 decoration: InputDecoration.collapsed(
                                      hintText: "Title...",
                                      hintStyle: TextStyle(

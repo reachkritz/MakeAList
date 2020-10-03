@@ -4,8 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:auto_size_text_field/auto_size_text_field.dart';
 
-final _padding = EdgeInsets.all(5.0);
-
 class Item extends StatefulWidget with ChangeNotifier{
   GlobalKey<FormState> formKey;
   String text;
@@ -54,6 +52,8 @@ class ItemState extends State<Item>{
     _controller.addListener(_setText);
     setState(() {
       _controller.text = widget.text;
+      //below ensures that the cursor always appears at the end of current text
+      _controller.selection = TextSelection.collapsed(offset: widget.text == null ? 0 : widget.text.length);
       widget.actionCode = widget.actionCode == null ? 0 : widget.actionCode;
     });
   }

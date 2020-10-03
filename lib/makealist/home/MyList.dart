@@ -29,11 +29,12 @@ class MyList with ChangeNotifier{
   }
 
   void addWithRecomputation(Item item) {
+    //Adding a static key attribute to each item to resolve the disappearing keyboard issue
     _formKey.add(new GlobalKey<FormState>());
     item.formKey = _formKey.last;
-    if(listItems.isNotEmpty){
+     if(listItems.isNotEmpty){
       listItems.last.focusFlag = false;
-    }
+     }
      item.addListener(_recomputeEfficiency);//notify listeners incase of toggle
      listItems.add(item);
      _recomputeEfficiency(); //notify listeners incase of adding new items to list
