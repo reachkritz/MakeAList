@@ -6,16 +6,18 @@ import 'package:makealist/makealist/service/PersistenceService.dart';
 
 import 'MyList.dart';
 import 'MyListCardView.dart';
-
+import 'dart:convert';
 class MyListClickableView extends StatelessWidget{
   PersistenceService service;
   MyList list;
   int index;
+  MyList temp;
   TextStyle style =
       TextStyle(fontSize: 20, color: Colors.white, fontFamily: 'Raleway');
 
   MyListClickableView(int index, MyList underlyingList, PersistenceService persistenceService) {
-    list = underlyingList;
+    //Making a copy so that the original list is not edited unless update is pressed
+    list = MyList.fromJson(underlyingList.toJson());
     this.index = index;
     this.service = persistenceService;
   }
@@ -61,7 +63,7 @@ class MyListClickableView extends StatelessWidget{
                                 borderRadius: new BorderRadius.circular(5.0)),
                             textColor: Colors.white,
                             hoverColor: Colors.cyan,
-                            onPressed: () => _closeDialog(context),
+                            onPressed: () => _closeDialog(temp, context),
                           ),
                         ])
                   ],
@@ -73,7 +75,7 @@ class MyListClickableView extends StatelessWidget{
     Navigator.of(context).pop();
   }
 
-  void _closeDialog(BuildContext context) {
+  void _closeDialog(MyList temp, BuildContext context) {
     Navigator.of(context).pop();
   }
 

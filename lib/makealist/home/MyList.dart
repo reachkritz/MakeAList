@@ -19,6 +19,15 @@ class MyList with ChangeNotifier{
     this.index = index;
   }
 
+  MyList.complete(String listHeader, int index, List<Item> listItems){
+    this.listHeader = listHeader;
+    this.listItems = listItems;
+    this.index = index;
+  }
+
+  MyList.clone(MyList list): this.complete(list.listHeader, list.index, list.listItems);
+
+
   MyList.fromJson(Map<String, dynamic> json){
     index = json['index'];
     listHeader = json['listHeader'];
@@ -49,7 +58,7 @@ class MyList with ChangeNotifier{
     _formKey.removeAt(index);
     if(listItems.isNotEmpty && index == listItems.length){
       listItems.last.focusFlag = true;
-    } else {
+    } else if(index!=0){
       listItems[index].focusFlag = true;
     }
     _recomputeEfficiency(); //notify listeners incase of deleting items from list
